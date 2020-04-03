@@ -18,7 +18,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='ecommerce',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=b'\n\x15store_inventory.proto\x12\tecommerce\"\xa7\x01\n\x07Product\x12\x11\n\tid_number\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x03 \x01(\t\x12\x14\n\x0cmanufacturer\x18\x04 \x01(\t\x12\x16\n\x0ewholesale_cost\x18\x05 \x01(\x01\x12\x11\n\tsale_cost\x18\x06 \x01(\x01\x12\r\n\x05stock\x18\x07 \x01(\x05\x12\x16\n\x0enum_of_product\x18\x08 \x01(\x05\"Q\n\x10ProductAndDemand\x12%\n\x07product\x18\x01 \x01(\x0b\x32\x14.ecommerce.ProductID\x12\x16\n\x0enum_of_product\x18\x02 \x01(\x05\"\x91\x01\n\x05Order\x12\x11\n\tid_number\x18\x01 \x01(\t\x12\x13\n\x0b\x64\x65stination\x18\x02 \x01(\t\x12\x0c\n\x04\x64\x61te\x18\x03 \x01(\t\x12-\n\x08products\x18\x04 \x03(\x0b\x32\x1b.ecommerce.ProductAndDemand\x12\x0f\n\x07is_paid\x18\x05 \x01(\x08\x12\x12\n\nis_shipped\x18\x06 \x01(\x08\"Z\n\tProductID\x12\x11\n\tid_number\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x14\n\x0cmanufacturer\x18\x03 \x01(\t\x12\x16\n\x0enum_of_product\x18\x04 \x01(\x05\"\x1c\n\x07OrderID\x12\x11\n\tid_number\x18\x01 \x01(\t\"\x99\x01\n\x11UpdateProductInfo\x12\x11\n\tid_number\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x03 \x01(\t\x12\x14\n\x0cmanufacturer\x18\x04 \x01(\t\x12\x16\n\x0ewholesale_cost\x18\x05 \x01(\x01\x12\x11\n\tsale_cost\x18\x06 \x01(\x01\x12\r\n\x05stock\x18\x07 \x01(\x05\"\x92\x01\n\x0fUpdateOrderInfo\x12\x11\n\tid_number\x18\x01 \x01(\t\x12\x13\n\x0b\x64\x65stination\x18\x02 \x01(\t\x12\x0c\n\x04\x64\x61te\x18\x03 \x01(\t\x12$\n\x08products\x18\x04 \x03(\x0b\x32\x12.ecommerce.Product\x12\x0f\n\x07is_paid\x18\x05 \x01(\x08\x12\x12\n\nis_shipped\x18\x06 \x01(\x08\"N\n\nAddToOrder\x12\x11\n\tid_number\x18\x01 \x01(\t\x12-\n\x08products\x18\x02 \x03(\x0b\x32\x1b.ecommerce.ProductAndDemand\"S\n\x0fRemoveFromOrder\x12\x11\n\tid_number\x18\x01 \x01(\t\x12-\n\x08products\x18\x02 \x03(\x0b\x32\x1b.ecommerce.ProductAndDemand\"2\n\x0bOrderStatus\x12\x12\n\nis_shipped\x18\x01 \x01(\x05\x12\x0f\n\x07is_paid\x18\x02 \x01(\x05\":\n\x10ListProductsInfo\x12\x14\n\x0cmanufacturer\x18\x01 \x01(\t\x12\x10\n\x08in_stock\x18\x02 \x01(\x08\"\x07\n\x05\x45mpty2\xeb\x04\n\x10ProductInventory\x12\x36\n\naddProduct\x12\x12.ecommerce.Product\x1a\x14.ecommerce.ProductID\x12\x30\n\x08\x61\x64\x64Order\x12\x10.ecommerce.Order\x1a\x12.ecommerce.OrderID\x12\x36\n\ngetProduct\x12\x14.ecommerce.ProductID\x1a\x12.ecommerce.Product\x12\x30\n\x08getOrder\x12\x12.ecommerce.OrderID\x1a\x10.ecommerce.Order\x12\x41\n\rupdateProduct\x12\x1c.ecommerce.UpdateProductInfo\x1a\x12.ecommerce.Product\x12;\n\x0bupdateOrder\x12\x1a.ecommerce.UpdateOrderInfo\x1a\x10.ecommerce.Order\x12=\n\x12\x61\x64\x64ProductsToOrder\x12\x15.ecommerce.AddToOrder\x1a\x10.ecommerce.Order\x12G\n\x17removeProductsFromOrder\x12\x1a.ecommerce.RemoveFromOrder\x1a\x10.ecommerce.Order\x12\x41\n\x0clistProducts\x12\x1b.ecommerce.ListProductsInfo\x1a\x12.ecommerce.Product0\x01\x12\x38\n\nlistOrders\x12\x16.ecommerce.OrderStatus\x1a\x10.ecommerce.Order0\x01\x62\x06proto3'
+  serialized_pb=b'\n\x15store_inventory.proto\x12\tecommerce\"\xa7\x01\n\x07Product\x12\x11\n\tid_number\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x03 \x01(\t\x12\x14\n\x0cmanufacturer\x18\x04 \x01(\t\x12\x16\n\x0ewholesale_cost\x18\x05 \x01(\x01\x12\x11\n\tsale_cost\x18\x06 \x01(\x01\x12\r\n\x05stock\x18\x07 \x01(\x05\x12\x16\n\x0enum_of_product\x18\x08 \x01(\x05\"Q\n\x10ProductAndDemand\x12%\n\x07product\x18\x01 \x01(\x0b\x32\x14.ecommerce.ProductID\x12\x16\n\x0enum_of_product\x18\x02 \x01(\x05\"\x91\x01\n\x05Order\x12\x11\n\tid_number\x18\x01 \x01(\t\x12\x13\n\x0b\x64\x65stination\x18\x02 \x01(\t\x12\x0c\n\x04\x64\x61te\x18\x03 \x01(\t\x12-\n\x08products\x18\x04 \x03(\x0b\x32\x1b.ecommerce.ProductAndDemand\x12\x0f\n\x07is_paid\x18\x05 \x01(\x08\x12\x12\n\nis_shipped\x18\x06 \x01(\x08\"Z\n\tProductID\x12\x11\n\tid_number\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x14\n\x0cmanufacturer\x18\x03 \x01(\t\x12\x16\n\x0enum_of_product\x18\x04 \x01(\x05\"\x1c\n\x07OrderID\x12\x11\n\tid_number\x18\x01 \x01(\t\"\x99\x01\n\x11UpdateProductInfo\x12\x11\n\tid_number\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x03 \x01(\t\x12\x14\n\x0cmanufacturer\x18\x04 \x01(\t\x12\x16\n\x0ewholesale_cost\x18\x05 \x01(\x01\x12\x11\n\tsale_cost\x18\x06 \x01(\x01\x12\r\n\x05stock\x18\x07 \x01(\x05\"l\n\x0fUpdateOrderInfo\x12\x11\n\tid_number\x18\x01 \x01(\t\x12\x13\n\x0b\x64\x65stination\x18\x02 \x01(\t\x12\x0c\n\x04\x64\x61te\x18\x03 \x01(\t\x12\x0f\n\x07is_paid\x18\x05 \x01(\x05\x12\x12\n\nis_shipped\x18\x06 \x01(\x05\"N\n\nAddToOrder\x12\x11\n\tid_number\x18\x01 \x01(\t\x12-\n\x08products\x18\x02 \x03(\x0b\x32\x1b.ecommerce.ProductAndDemand\"S\n\x0fRemoveFromOrder\x12\x11\n\tid_number\x18\x01 \x01(\t\x12-\n\x08products\x18\x02 \x03(\x0b\x32\x1b.ecommerce.ProductAndDemand\"2\n\x0bOrderStatus\x12\x12\n\nis_shipped\x18\x01 \x01(\x05\x12\x0f\n\x07is_paid\x18\x02 \x01(\x05\":\n\x10ListProductsInfo\x12\x14\n\x0cmanufacturer\x18\x01 \x01(\t\x12\x10\n\x08in_stock\x18\x02 \x01(\x08\"\x07\n\x05\x45mpty2\xeb\x04\n\x10ProductInventory\x12\x36\n\naddProduct\x12\x12.ecommerce.Product\x1a\x14.ecommerce.ProductID\x12\x30\n\x08\x61\x64\x64Order\x12\x10.ecommerce.Order\x1a\x12.ecommerce.OrderID\x12\x36\n\ngetProduct\x12\x14.ecommerce.ProductID\x1a\x12.ecommerce.Product\x12\x30\n\x08getOrder\x12\x12.ecommerce.OrderID\x1a\x10.ecommerce.Order\x12\x41\n\rupdateProduct\x12\x1c.ecommerce.UpdateProductInfo\x1a\x12.ecommerce.Product\x12;\n\x0bupdateOrder\x12\x1a.ecommerce.UpdateOrderInfo\x1a\x10.ecommerce.Order\x12=\n\x12\x61\x64\x64ProductsToOrder\x12\x15.ecommerce.AddToOrder\x1a\x10.ecommerce.Order\x12G\n\x17removeProductsFromOrder\x12\x1a.ecommerce.RemoveFromOrder\x1a\x10.ecommerce.Order\x12\x41\n\x0clistProducts\x12\x1b.ecommerce.ListProductsInfo\x1a\x12.ecommerce.Product0\x01\x12\x38\n\nlistOrders\x12\x16.ecommerce.OrderStatus\x1a\x10.ecommerce.Order0\x01\x62\x06proto3'
 )
 
 
@@ -393,23 +393,16 @@ _UPDATEORDERINFO = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='products', full_name='ecommerce.UpdateOrderInfo.products', index=3,
-      number=4, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
+      name='is_paid', full_name='ecommerce.UpdateOrderInfo.is_paid', index=3,
+      number=5, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='is_paid', full_name='ecommerce.UpdateOrderInfo.is_paid', index=4,
-      number=5, type=8, cpp_type=7, label=1,
-      has_default_value=False, default_value=False,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='is_shipped', full_name='ecommerce.UpdateOrderInfo.is_shipped', index=5,
-      number=6, type=8, cpp_type=7, label=1,
-      has_default_value=False, default_value=False,
+      name='is_shipped', full_name='ecommerce.UpdateOrderInfo.is_shipped', index=4,
+      number=6, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
@@ -425,8 +418,8 @@ _UPDATEORDERINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=716,
-  serialized_end=862,
+  serialized_start=715,
+  serialized_end=823,
 )
 
 
@@ -463,8 +456,8 @@ _ADDTOORDER = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=864,
-  serialized_end=942,
+  serialized_start=825,
+  serialized_end=903,
 )
 
 
@@ -501,8 +494,8 @@ _REMOVEFROMORDER = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=944,
-  serialized_end=1027,
+  serialized_start=905,
+  serialized_end=988,
 )
 
 
@@ -539,8 +532,8 @@ _ORDERSTATUS = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1029,
-  serialized_end=1079,
+  serialized_start=990,
+  serialized_end=1040,
 )
 
 
@@ -577,8 +570,8 @@ _LISTPRODUCTSINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1081,
-  serialized_end=1139,
+  serialized_start=1042,
+  serialized_end=1100,
 )
 
 
@@ -601,13 +594,12 @@ _EMPTY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1141,
-  serialized_end=1148,
+  serialized_start=1102,
+  serialized_end=1109,
 )
 
 _PRODUCTANDDEMAND.fields_by_name['product'].message_type = _PRODUCTID
 _ORDER.fields_by_name['products'].message_type = _PRODUCTANDDEMAND
-_UPDATEORDERINFO.fields_by_name['products'].message_type = _PRODUCT
 _ADDTOORDER.fields_by_name['products'].message_type = _PRODUCTANDDEMAND
 _REMOVEFROMORDER.fields_by_name['products'].message_type = _PRODUCTANDDEMAND
 DESCRIPTOR.message_types_by_name['Product'] = _PRODUCT
@@ -716,8 +708,8 @@ _PRODUCTINVENTORY = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=1151,
-  serialized_end=1770,
+  serialized_start=1112,
+  serialized_end=1731,
   methods=[
   _descriptor.MethodDescriptor(
     name='addProduct',

@@ -1,0 +1,98 @@
+syntax = "proto3"; 
+package ecommerce;
+
+service ProductInventory { 
+    rpc addProduct(Product) returns (ProductID); 
+    rpc addOrder(Order) returns (OrderID);
+    rpc getProduct(ProductID) returns (Product);
+    rpc getOrder(OrderID) returns (Order);
+    rpc updateProduct(UpdateProductInfo) returns (Product);
+    rpc updateOrder(UpdateOrderInfo) returns (Order);
+    rpc addProductsToOrder(AddToOrder) returns (Order);
+    rpc removeProductsFromOrder(RemoveFromOrder) returns (Order);
+    rpc listProducts(ListProductsInfo) returns (stream Product);
+    // rpc listProductsInStock(Empty) returns (stream Product);
+    rpc listOrders(OrderStatus) returns (stream Order);
+
+    // rpc list_Products(Filter) returns (stream Product);
+}
+
+message Product { 
+    string id_number = 1;
+    string name = 2;
+    string description = 3;
+    string manufacturer = 4;
+    double wholesale_cost = 5;
+    double sale_cost = 6;
+    int32 stock = 7;
+    int32 num_of_product = 8;
+}
+
+message ProductAndDemand {
+    ProductID product = 1;
+    int32 num_of_product = 2;
+}
+
+message Order {
+    string id_number = 1;
+    string destination = 2;
+    string date = 3;
+    repeated ProductAndDemand products = 4;
+    int32 is_paid = 5;
+    int32 is_shipped = 6;
+}
+
+message ProductID { 
+    string id_number = 1;
+    string name = 2;
+    string manufacturer = 3;
+    int32 num_of_product = 4;
+}
+
+message OrderID {
+    string id_number = 1;
+}
+
+message UpdateProductInfo {
+    string id_number = 1;
+    string name = 2;
+    string description = 3;
+    string manufacturer = 4;
+    double wholesale_cost = 5;
+    double sale_cost = 6;
+    int32 stock = 7;
+}
+
+message UpdateOrderInfo {
+    string id_number = 1;
+    string destination = 2;
+    string date = 3;
+    // repeated Product products = 4;
+    int32 is_paid = 5;
+    int32 is_shipped = 6;
+}
+
+message AddToOrder {
+    string id_number = 1;
+    repeated ProductAndDemand products = 2;
+}
+
+message RemoveFromOrder {
+    string id_number = 1;
+    repeated ProductAndDemand products = 2;
+}
+
+message OrderStatus {
+    int32 is_shipped = 1;
+    int32 is_paid = 2;
+}
+
+message ListProductsInfo {
+    string manufacturer = 1;
+    int32 in_stock = 2;
+}
+
+message Empty {
+
+}
+

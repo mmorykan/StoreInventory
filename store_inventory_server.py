@@ -31,10 +31,6 @@ class ProductInventory(store_inventory_pb2_grpc.ProductInventoryServicer):
 
     def addProduct(self, request, context):
         id_number = str(uuid.uuid4())
-        # for key in self.product_id_database:
-        #     if request.name == self.product_database[key].name:
-        #         print('cant have same name') 
-                # Make so that products cant have same name
         name = request.name
         description = request.description
         manufacturer = request.manufacturer
@@ -42,10 +38,9 @@ class ProductInventory(store_inventory_pb2_grpc.ProductInventoryServicer):
         sale_cost = request.sale_cost
         stock = request.stock
         self.product_id_database[id_number] = store_inventory_pb2.Product(name=name, description=description, manufacturer=manufacturer, wholesale_cost=wholesale_cost, sale_cost=sale_cost, stock=stock)
-        self.product_name_database[name] = store_inventory_pb2.Product(id_number=id_number, description=description, manufacturer=manufacturer, wholesale_cost=wholesale_cost, sale_cost=sale_cost, stock=stock)
-        # print(self.product_id_database[id_number])
-        # print(self.product_name_database[name])
-        return store_inventory_pb2.ProductID(id_number=id_number, name=name)
+        if name not in self.product_name_database:
+            self.product_name_database[name] = store_inventory_pb2.Product(id_number=id_number, description=description, manufacturer=manufacturer, wholesale_cost=wholesale_cost, sale_cost=sale_cost, stock=stock)
+            return store_inventory_pb2.ProductID(id_number=id_number, name=name)
 
 
     def getProduct(self, request, context):
@@ -98,12 +93,15 @@ class ProductInventory(store_inventory_pb2_grpc.ProductInventoryServicer):
                 current_product_by_name = self.getProductByName(product_demand.product.name)
                 current_product_by_id = self.getProductByID(current_product_by_name.id_number)
 
+
+            print('stock variable')
+
             if current_product_by_id.stock >= product_demand.num_of_product:
                 print('inside if statemtn')
                 self.product_id_database[current_product_by_name.id_number].stock -= product_demand.num_of_product
                 print('inbetween')
                 self.product_name_database[current_product_by_id.name].stock -= product_demand.num_of_product
-                print('after efvetyting')
+                print('after everything')
                 products.append(product_demand)
 
         return products
@@ -145,9 +143,9 @@ class ProductInventory(store_inventory_pb2_grpc.ProductInventoryServicer):
             order.destination = request.destination
         if request.date:
             order.date = request.date
-        if request.is_paid is not None:
+        if request.is_paid:
             order.is_paid = request.is_paid
-        if request.is_shipped is not None:
+        if request.is_shipped:
             order.is_shipped = request.is_shipped
 
         self.order_database[request.id_number] = store_inventory_pb2.Order(destination=order.destination, 
@@ -163,11 +161,13 @@ class ProductInventory(store_inventory_pb2_grpc.ProductInventoryServicer):
 
     def addProductsToOrder(self, request, context):
         current_order = self.getOrderHelper(request, context)
-        # for order_id, order in self.order_database.items():
-        #     if current_order == order:
-        #         current_order_id = order_id
+       
+       # Fiiiiixxxxxxx
+        products_to_add = self.subtract_product_stock(request.products)
+        for i in range(len(products_to_add)):
+            products_to_add[i].num_of_product += current_order.products[i].num_of_product
 
-        current_order.products.extend(self.subtract_product_stock(request.products))
+        current_order.products.extend(products_to_add)
         self.order_database[request.id_number] = current_order 
         return current_order
 
@@ -180,14 +180,13 @@ class ProductInventory(store_inventory_pb2_grpc.ProductInventoryServicer):
         for product_and_demand in request.products:
             if product_and_demand.product.id_number:
                 current_product_by_id = self.getProductByID(product_and_demand.product.id_number)
-                current_product_by_name = self.getProductByName(current_product_by_name.name)
+                current_product_by_name = self.getProductByName(current_product_by_id.name)
             elif product_and_demand.product.name:
                 current_product_by_name = self.getProductByName(product_and_demand.product.name)
-                current_product_by_id = self.getProductByID(current_product_by_name.product.id_number)
-
+                current_product_by_id = self.getProductByID(current_product_by_name.id_number)
 
             for prod in order.products:
-                if prod.product.name == current_product_by_id.name:
+                if prod.product.id_number == current_product_by_name.id_number:
                     if prod.num_of_product > product_and_demand.num_of_product:
                         prod.num_of_product -= product_and_demand.num_of_product
                         self.product_id_database[current_product_by_name.id_number].stock += product_and_demand.num_of_product
@@ -197,7 +196,9 @@ class ProductInventory(store_inventory_pb2_grpc.ProductInventoryServicer):
                         self.product_name_database[current_product_by_id.name].stock += product_and_demand.num_of_product
                         elements_to_remove.append(prod)
 
-        order.products = [product for product in order.products if product not in elements_to_remove]
+        for product in elements_to_remove:
+            order.products.remove(product)
+                
         self.order_database[request.id_number] = order
 
         return order

@@ -20,8 +20,8 @@ def main():
         response4 = stub.addProduct(store_inventory_pb2.Product(name='fourth', description='fourth item', manufacturer='tv', wholesale_cost=3, sale_cost=90, stock=90))
         print(response4)
        
-        # list_of_items = list(stub.listProducts(store_inventory_pb2.ListProductsInfo()))
-        # print(list_of_items)
+        list_of_items = list(stub.listProducts(store_inventory_pb2.ListProductsInfo()))
+        print(list_of_items)
 
         product1 = stub.getProduct(store_inventory_pb2.ProductID(id_number=response1.id_number))
         print(product1)
@@ -29,11 +29,11 @@ def main():
         product3 = stub.getProduct(store_inventory_pb2.ProductID(id_number=response3.id_number))
         product4 = stub.getProduct(store_inventory_pb2.ProductID(id_number=response4.id_number))
 
-        order1 = stub.addOrder(store_inventory_pb2.Order(destination='here', date='today', products=[store_inventory_pb2.ProductAndDemand(product=store_inventory_pb2.ProductID(id_number=response1.id_number), num_of_product=1)], is_shipped=True, is_paid=True))
-        order2 = stub.addOrder(store_inventory_pb2.Order(destination='there', date='tomorrow', products=[store_inventory_pb2.ProductAndDemand(product=store_inventory_pb2.ProductID(id_number=response2.id_number), num_of_product=3)], is_shipped=True, is_paid=False))
-        order3 = stub.addOrder(store_inventory_pb2.Order(destination='over', date='friday', products=[store_inventory_pb2.ProductAndDemand(product=store_inventory_pb2.ProductID(id_number=response3.id_number), num_of_product=6)], is_shipped=False, is_paid=True))
+        order1 = stub.addOrder(store_inventory_pb2.Order(destination='here', date='today', products=[store_inventory_pb2.ProductAndDemand(product=store_inventory_pb2.ProductID(id_number=response1.id_number), num_of_product=1)], is_shipped=1, is_paid=1))
+        order2 = stub.addOrder(store_inventory_pb2.Order(destination='there', date='tomorrow', products=[store_inventory_pb2.ProductAndDemand(product=store_inventory_pb2.ProductID(id_number=response2.id_number), num_of_product=3)], is_shipped=1, is_paid=-1))
+        order3 = stub.addOrder(store_inventory_pb2.Order(destination='over', date='friday', products=[store_inventory_pb2.ProductAndDemand(product=store_inventory_pb2.ProductID(id_number=response3.id_number), num_of_product=6)], is_shipped=1, is_paid=1))
 
-        list_of_shipped_paid_orders = list(stub.listOrders(store_inventory_pb2.OrderStatus(is_shipped=1)))
+        list_of_shipped_paid_orders = list(stub.listOrders(store_inventory_pb2.OrderStatus()))
         print(list_of_shipped_paid_orders)
 
         # list_of_shipped_orders = list(stub.listOrders(store_inventory_pb2.OrderStatus(is_shipped=True, is_paid=False)))
@@ -46,20 +46,25 @@ def main():
         # print(list_of_orders)
 
 
-
-        # some_order = stub.addOrder(store_inventory_pb2.Order(destination='Behel', date='Monday', products=[store_inventory_pb2.ProductAndDemand(product=product1, num_of_product=3), store_inventory_pb2.ProductAndDemand(product=product2, num_of_product=5), store_inventory_pb2.ProductAndDemand(product=product3, num_of_product=7)], is_shipped=True, is_paid=True))
-        # # print(some_order)
-
-        # list_of = list(stub.listOrders(store_inventory_pb2.OrderStatus(is_shipped=True)))
-        # # print(list_of)
-
-        # add_prod = stub.addProductsToOrder(store_inventory_pb2.AddToOrder(id_number=some_order.id_number, products=[store_inventory_pb2.ProductAndDemand(product=product4, num_of_product=8)]))
+        # add_prod = stub.addProductsToOrder(store_inventory_pb2.AddToOrder(id_number=order3.id_number, products=[store_inventory_pb2.ProductAndDemand(product=store_inventory_pb2.ProductID(id_number=response3.id_number), num_of_product=8)]))
         # print(add_prod)
 
-        # remo = stub.removeProductsFromOrder(store_inventory_pb2.RemoveFromOrder(id_number=some_order.id_number, products=[store_inventory_pb2.ProductID(id_number=response4.id_number)]))
+        # get = stub.getProduct(store_inventory_pb2.ProductID(id_number=response3.id_number))
+        # print(get)
+
+        # remo = stub.removeProductsFromOrder(store_inventory_pb2.RemoveFromOrder(id_number=order3.id_number, products=[store_inventory_pb2.ProductAndDemand(product=store_inventory_pb2.ProductID(id_number=response3.id_number), num_of_product=6)]))
         # print(remo)
 
-        
+        up = stub.updateOrder(store_inventory_pb2.UpdateOrderInfo(id_number=order3.id_number, date='blah'))
+        print(up)
+
+        ord = stub.getOrder(store_inventory_pb2.OrderID(id_number=order3.id_number))
+        print(ord)
+
+        x = stub.getProduct(store_inventory_pb2.ProductID(id_number=response3.id_number))
+        print(x)
+
+        # up = stub.updateOrder(store_inventory_pb2.UpdateOrderInfo())
 
         # response = stub.getProduct(store_inventory_pb2.ProductID(name='sup'))
         # print(response)
