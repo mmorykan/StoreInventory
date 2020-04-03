@@ -25,7 +25,7 @@ message Product {
     double wholesale_cost = 5;
     double sale_cost = 6;
     int32 stock = 7;
-    int32 num_of_product = 8;
+    // int32 num_of_product = 8;
 }
 
 message ProductAndDemand {
@@ -46,7 +46,7 @@ message ProductID {
     string id_number = 1;
     string name = 2;
     string manufacturer = 3;
-    int32 num_of_product = 4;
+    // int32 num_of_product = 4;
 }
 
 message OrderID {

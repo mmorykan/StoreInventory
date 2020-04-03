@@ -3,6 +3,7 @@ import grpc
 import uuid
 import store_inventory_pb2
 import store_inventory_pb2_grpc
+import store_inventory_shared_data
 
 class ProductInventory(store_inventory_pb2_grpc.ProductInventoryServicer):
     product_id_database = {}
@@ -10,11 +11,7 @@ class ProductInventory(store_inventory_pb2_grpc.ProductInventoryServicer):
     order_database = {}
 
 
-    def same_name(self):
-        pass
-
-
-    def getProductByIDorName(self, request, context):
+    def getProductByIDorName(self, request):
         if request.id_number:
             return self.getProductByID(request.id_number)
         else:
