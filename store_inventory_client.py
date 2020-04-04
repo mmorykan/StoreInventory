@@ -34,7 +34,13 @@ def main():
         product3 = stub.getProduct(store_inventory_pb2.ProductID(id_number=response3.id_number))
         # product4 = stub.getProduct(store_inventory_pb2.ProductID(id_number=response4.id_number))
 
-        # order1 = stub.addOrder(store_inventory_pb2.Order(destination='here', date='today', products=[store_inventory_pb2.ProductAndDemand(product=store_inventory_pb2.ProductID(id_number=response1.id_number), num_of_product=1)], is_shipped=1, is_paid=1))
+        order1 = stub.addOrder(store_inventory_pb2.Order(destination='here', date='today', products=[store_inventory_pb2.ProductAndDemand(product=store_inventory_pb2.ProductID(id_number=response1.id_number), num_of_product=1)], is_shipped=1, is_paid=1))
+        print(order1)
+        getorder1 = stub.getOrder(store_inventory_pb2.OrderID(id_number=order1.id_number))
+        print(getorder1)
+
+        re_get_product1 = stub.getProduct(store_inventory_pb2.ProductID(id_number=response1.id_number))
+        print(re_get_product1)
         # order2 = stub.addOrder(store_inventory_pb2.Order(destination='there', date='tomorrow', products=[store_inventory_pb2.ProductAndDemand(product=store_inventory_pb2.ProductID(id_number=response2.id_number), num_of_product=3)], is_shipped=1, is_paid=-1))
         # order3 = stub.addOrder(store_inventory_pb2.Order(destination='over', date='friday', products=[store_inventory_pb2.ProductAndDemand(product=store_inventory_pb2.ProductID(id_number=response3.id_number), num_of_product=6)], is_shipped=1, is_paid=1))
 

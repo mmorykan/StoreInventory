@@ -51,62 +51,28 @@ class ProductInventory(store_inventory_pb2_grpc.ProductInventoryServicer):
 
         ################################################################
 
+    def update_order_fields(self, order):
+        list_of_products = []
+        for product_demand in order['products']:
+            product_conversion = store_inventory_pb2.ProductAndDemand(product=store_inventory_pb2.ProductID(id_number=product_demand['productID']), num_of_product=product_demand['number_of_product'])
+            list_of_products.append(product_conversion)
 
-    def subtract_product_stock(self, product_list): # Fixxxx
-        products = []
-        print(product_list)
-        for product_demand in product_list:
-            print(product_demand)
-            if product_demand.product.id_number:
-                print(product_demand.product.id_number)
-                current_product_by_id = self.getProductByID(product_demand.product.id_number)
-                current_product_by_name = self.getProductByName(current_product_by_id.name)
-            elif product_demand.product.name:
-                current_product_by_name = self.getProductByName(product_demand.product.name)
-                current_product_by_id = self.getProductByID(current_product_by_name.id_number)
-
-
-            print('stock variable')
-
-            if current_product_by_id.stock >= product_demand.num_of_product:
-                print('inside if statemtn')
-                self.product_id_database[current_product_by_name.id_number].stock -= product_demand.num_of_product
-                print('inbetween')
-                self.product_name_database[current_product_by_id.name].stock -= product_demand.num_of_product
-                print('after everything')
-                products.append(product_demand)
-
-        return products
-
-
-    def add_product_stock(self, products_to_remove): # Fixxxxxx
-        pass
+        return store_inventory_pb2.Order(id_number=order['id_number'], destination=order['destination'], date=order['date'], products=list_of_products, is_paid=order['is_paid'], is_shipped=order['is_shipped'])
 
 
     def addOrder(self, request, context):
-        id_number = str(uuid.uuid4())
-        destination = request.destination
-        date = request.date
-        print(request.products)
-        products = self.subtract_product_stock(request.products)
-        is_paid = request.is_paid
-        is_shipped = request.is_shipped
-        
-        self.order_database[id_number] = store_inventory_pb2.Order(id_number=id_number, 
-                                                                   destination=destination, 
-                                                                   date=date,
-                                                                   products=products, 
-                                                                   is_paid=is_paid, 
-                                                                   is_shipped=is_shipped)
-        return store_inventory_pb2.OrderID(id_number=id_number)
+        list_of_products = []
+        for product_demand in request.products:
+            product_demand = {'productID': product_demand.product.id_number, 'number_of_product': product_demand.num_of_product}
+            list_of_products.append(product_demand)
+        order_id = self.shared_database.add_order(destination=request.destination, date=request.date, products=list_of_products, is_paid=request.is_paid, is_shipped=request.is_shipped)
 
-
-    def getOrderHelper(self, request, context):
-        return self.order_database[request.id_number]
+        return store_inventory_pb2.OrderID(id_number=order_id)
 
     
     def getOrder(self, request, context):
-        return self.getOrderHelper(request, context)
+        order = self.shared_database.get_order(request.id_number)
+        return self.update_order_fields(order)
 
 
     def updateOrderHelper(self, request, context):

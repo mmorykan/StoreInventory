@@ -81,7 +81,6 @@ class Inventory:
         self.product_id_database[product['name']] = product
         return product
 
-
     def list_products(self, in_stock, manufacturer):
         """
         List all products based on whether or not they are in stock and/or the manufacturer or just list all total products
@@ -113,7 +112,33 @@ class Inventory:
 
         return product_list
 
+    def subtract_product_stock(self, list_of_product_demand):
+        products_to_delete = []
+        for product_and_demand in list_of_product_demand:
+            current_product = self.getProductByID(product_and_demand['productID'])
+            if current_product['amount_in_stock'] >= product_and_demand['number_of_product']:
+                current_product['amount_in_stock'] -= product_and_demand['number_of_product']
+                self.product_id_database[current_product['id_number']] = current_product
+                self.product_name_database[current_product['name']] = current_product
+            else:
+                products_to_delete.append(product_and_demand)
+        for product in products_to_delete:
+            list_of_product_demand.remove(product)
 
+        return list_of_product_demand
+
+    def add_order(self, **order_info):
+        id_number = str(uuid.uuid4())
+        order_info['id_number'] = id_number
+        order_info['products'] = self.subtract_product_stock(order_info['products'])
+        self.order_database[id_number] = order_info
+        return id_number
+
+    def get_order(self, id_number):
+        return self.order_database[id_number]
+
+
+    
 
 def main():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))    
