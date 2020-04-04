@@ -24,7 +24,7 @@ message Product {
     string manufacturer = 4;
     double wholesale_cost = 5;
     double sale_cost = 6;
-    int32 stock = 7;
+    int32 amount_in_stock = 7;
     // int32 num_of_product = 8;
 }
 
@@ -60,7 +60,7 @@ message UpdateProductInfo {
     string manufacturer = 4;
     double wholesale_cost = 5;
     double sale_cost = 6;
-    int32 stock = 7;
+    int32 amount_in_stock = 7;
 }
 
 message UpdateOrderInfo {

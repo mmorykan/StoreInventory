@@ -9,72 +9,47 @@ class ProductInventory(store_inventory_pb2_grpc.ProductInventoryServicer):
     product_id_database = {}
     product_name_database = {}
     order_database = {}
+    shared_database = store_inventory_shared_data.Inventory()
 
-
-    def getProductByIDorName(self, request):
-        if request.id_number:
-            return self.getProductByID(request.id_number)
-        else:
-            return self.getProductByName(request.name)
-
-
-    def getProductByID(self, id_number):
-        return self.product_id_database[id_number]
-
-
-    def getProductByName(self, name):
-        return self.product_name_database[name]
-        
+    def update_product_fields(self, product):
+        """
+        Creates the gRPC product object from the given product
+        """
+        return store_inventory_pb2.Product(id_number=product['id_number'], name=product['name'], description=product['description'], manufacturer=product['manufacturer'], wholesale_cost=product['wholesale_cost'], sale_cost=product['sale_cost'], amount_in_stock=product['amount_in_stock'])
 
     def addProduct(self, request, context):
-        id_number = str(uuid.uuid4())
-        name = request.name
-        description = request.description
-        manufacturer = request.manufacturer
-        wholesale_cost = request.wholesale_cost
-        sale_cost = request.sale_cost
-        stock = request.stock
-        self.product_id_database[id_number] = store_inventory_pb2.Product(name=name, description=description, manufacturer=manufacturer, wholesale_cost=wholesale_cost, sale_cost=sale_cost, stock=stock)
-        if name not in self.product_name_database:
-            self.product_name_database[name] = store_inventory_pb2.Product(id_number=id_number, description=description, manufacturer=manufacturer, wholesale_cost=wholesale_cost, sale_cost=sale_cost, stock=stock)
-            return store_inventory_pb2.ProductID(id_number=id_number, name=name)
+        """
+        Adds a product to the product id and name databases as well as obtains a unique id for the new product and returns a product ID
+        """
+        valid_id = self.shared_database.add_product(name=request.name, description=request.description, manufacturer=request.manufacturer, wholesale_cost=request.wholesale_cost, sale_cost=request.sale_cost, amount_in_stock=request.amount_in_stock)
+        if valid_id:
+            return store_inventory_pb2.ProductID(id_number=valid_id, name=request.name)
 
 
     def getProduct(self, request, context):
-        return self.getProductByIDorName(request, context)
-
+        """
+        Returns the current product based on product id or name
+        """
+        product = self.shared_database.getProductByIDorName(request.id_number, request.name)
+        return self.update_product_fields(product)
 
     def updateProduct(self, request, context):
-        product = self.getProductByIDorName(request, context)
-        if request.description:
-            product.description = request.description
-        if request.manufacturer:
-            product.manufacturer = request.manufacturer
-        if request.wholesale_cost:
-            product.wholesale_cost = request.wholesale_cost
-        if request.sale_cost:
-            product.sale_cost = request.sale_cost
-        if request.stock:
-            product.stock = request.stock
-        return product
-    
+        """
+        Update the specified fields for the given project. Can update every field except product id and name
+        """
+        product = self.shared_database.update_product(id_number=request.id_number, name=request.name, description=request.description, manufacturer=request.manufacturer, wholesale_cost=request.wholesale_cost, sale_cost=request.sale_cost, amount_in_stock=request.amount_in_stock)
+        return self.update_product_fields(product)    
 
     def listProducts(self, request, context):
-        if request.in_stock and request.manufacturer:
-            for product in self.product_id_database.values():
-                if product.stock > 0 and product.manufacturer == request.manufacturer:
-                    yield product
-        elif request.manufacturer:
-            for product in self.product_id_database.values():
-                if product.manufacturer == request.manufacturer:
-                    yield product
-        elif request.in_stock:
-             for product in self.product_id_database.values():
-                if product.stock > 0:
-                    yield product
-        else:
-            for product in self.product_id_database.values():
-                yield product
+        """
+        Lists all total products or just the products in stock and/or produced by a specified manufacturer
+        """
+        product_list = self.shared_database.list_products(request.in_stock, request.manufacturer)
+        for product in product_list:
+            yield self.update_product_fields(product)
+
+
+        ################################################################
 
 
     def subtract_product_stock(self, product_list): # Fixxxx
