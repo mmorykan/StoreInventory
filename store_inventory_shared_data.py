@@ -173,7 +173,7 @@ class Inventory:
     def add_products_to_order(self, id_number, product_list):
         """
         Add the product list to the order with the given id.
-        Updates product stock
+        Updates product stocks
         Returns the order 
         """
         product_found = False
@@ -195,9 +195,58 @@ class Inventory:
 
 
     def remove_products_from_order(self, id_number, product_list):
-        pass
+        """
+        Removes products or an amount of products from an order
+        Updates product stocks
+        Returns an order
+        """
+        products_to_remove = []
+        order = self.get_order(id_number)
+        for new_product_and_demand in product_list:
+            for old_prod_dem in order['products']:
+                if old_prod_dem['id_number'] == new_product_and_demand['id_number']:
+                    if old_prod_dem['number_of_product'] > new_product_and_demand['number_of_product']:
+                        old_prod_dem['number_of_product'] -= new_product_and_demand['number_of_product']
+                    elif old_prod_dem['number_of_product'] == new_product_and_demand['number_of_product']:
+                        products_to_remove.append(old_prod_dem)
+
+                    self.product_id_database[old_prod_dem['id_number']]['amount_in_stock'] += new_product_and_demand['number_of_product']
+                    print('updated 1')
+                    # self.product_name_database[old_prod_dem['name']]['amount_in_stock'] += new_product_and_demand['number_of_product']
+
+        for product_and_demand in products_to_remove:
+            order['products'].remove(product_and_demand)
+
+        self.order_database[order['id_number']] = order
+        return order
 
 
+    def list_orders(self, is_shipped, is_paid):
+        """
+        List all orders based on shipped status and paid status
+        Returns a list of orders
+        """
+        list_of_orders = []
+        if is_shipped == 0 and is_paid == 0:
+            list_of_orders = self.order_database.values()
+
+        elif is_shipped != 0 and is_paid == 0:
+            for order in self.order_database.values():
+                if order['is_shipped'] == is_shipped:
+                    list_of_orders.append(order)
+
+        elif is_paid != 0 and is_shipped == 0:
+            for order in self.order_database.values():
+                if order['is_paid'] == is_paid:
+                    list_of_orders.append(order)
+
+        else:
+            for order in self.order_database.values():
+                if order['is_shipped'] == is_shipped and order['is_paid'] == is_paid:
+                    list_of_orders.append(order)
+
+        return list_of_orders
+    
 
 def main():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))    

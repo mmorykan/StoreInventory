@@ -47,11 +47,20 @@ def main():
         # updated_order = stub.updateOrder(store_inventory_pb2.UpdateOrderInfo(id_number=order1.id_number, destination='shelby', date='tommorew', is_shipped=-1))
         # print(updated_order)
 
-        addprod = stub.addProductsToOrder(store_inventory_pb2.AddToOrder(id_number=order1.id_number, products=[store_inventory_pb2.ProductAndDemand(product=store_inventory_pb2.ProductID(id_number=response1.id_number), num_of_product=1)]))
-        print(addprod)
+        # addprod = stub.addProductsToOrder(store_inventory_pb2.AddToOrder(id_number=order1.id_number, products=[store_inventory_pb2.ProductAndDemand(product=store_inventory_pb2.ProductID(id_number=response1.id_number), num_of_product=1)]))
+        # print(addprod)
 
-        g = stub.getProduct(store_inventory_pb2.ProductID(id_number=response1.id_number))
-        print(g)
+        # g = stub.getProduct(store_inventory_pb2.ProductID(id_number=response1.id_number))
+        # print(g)
+
+        # rem = stub.removeProductsFromOrder(store_inventory_pb2.RemoveFromOrder(id_number=order1.id_number, products=[store_inventory_pb2.ProductAndDemand(product=store_inventory_pb2.ProductID(id_number=response1.id_number), num_of_product=1)]))
+        # print(rem)
+
+        # x = stub.getProduct(store_inventory_pb2.ProductID(id_number=response1.id_number))
+        # print(x)
+
+        list_of_orders = list(stub.listOrders(store_inventory_pb2.OrderStatus()))
+        print(list_of_orders)
         # list_of_shipped_paid_orders = list(stub.listOrders(store_inventory_pb2.OrderStatus()))
         # print(list_of_shipped_paid_orders)
 
