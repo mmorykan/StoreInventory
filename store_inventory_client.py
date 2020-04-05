@@ -24,26 +24,34 @@ def main():
         print(list_of_items)
         
 
-        product1 = stub.getProduct(store_inventory_pb2.ProductID(id_number=response1.id_number))
-        print(product1)
+        # product1 = stub.getProduct(store_inventory_pb2.ProductID(id_number=response1.id_number))
+        # print(product1)
 
-        upd = stub.updateProduct(store_inventory_pb2.UpdateProductInfo(id_number=response1.id_number, wholesale_cost=890, description='something lame'))
-        print(upd)
-        product2 = stub.getProduct(store_inventory_pb2.ProductID(name=response2.name))
-        print(product2)
-        product3 = stub.getProduct(store_inventory_pb2.ProductID(id_number=response3.id_number))
+        # upd = stub.updateProduct(store_inventory_pb2.UpdateProductInfo(id_number=response1.id_number, wholesale_cost=890, description='something lame'))
+        # print(upd)
+        # product2 = stub.getProduct(store_inventory_pb2.ProductID(name=response2.name))
+        # print(product2)
+        # product3 = stub.getProduct(store_inventory_pb2.ProductID(id_number=response3.id_number))
         # product4 = stub.getProduct(store_inventory_pb2.ProductID(id_number=response4.id_number))
 
         order1 = stub.addOrder(store_inventory_pb2.Order(destination='here', date='today', products=[store_inventory_pb2.ProductAndDemand(product=store_inventory_pb2.ProductID(id_number=response1.id_number), num_of_product=1)], is_shipped=1, is_paid=1))
         print(order1)
-        getorder1 = stub.getOrder(store_inventory_pb2.OrderID(id_number=order1.id_number))
-        print(getorder1)
+        # getorder1 = stub.getOrder(store_inventory_pb2.OrderID(id_number=order1.id_number))
+        # print(getorder1)
 
         re_get_product1 = stub.getProduct(store_inventory_pb2.ProductID(id_number=response1.id_number))
         print(re_get_product1)
         # order2 = stub.addOrder(store_inventory_pb2.Order(destination='there', date='tomorrow', products=[store_inventory_pb2.ProductAndDemand(product=store_inventory_pb2.ProductID(id_number=response2.id_number), num_of_product=3)], is_shipped=1, is_paid=-1))
         # order3 = stub.addOrder(store_inventory_pb2.Order(destination='over', date='friday', products=[store_inventory_pb2.ProductAndDemand(product=store_inventory_pb2.ProductID(id_number=response3.id_number), num_of_product=6)], is_shipped=1, is_paid=1))
 
+        # updated_order = stub.updateOrder(store_inventory_pb2.UpdateOrderInfo(id_number=order1.id_number, destination='shelby', date='tommorew', is_shipped=-1))
+        # print(updated_order)
+
+        addprod = stub.addProductsToOrder(store_inventory_pb2.AddToOrder(id_number=order1.id_number, products=[store_inventory_pb2.ProductAndDemand(product=store_inventory_pb2.ProductID(id_number=response1.id_number), num_of_product=1)]))
+        print(addprod)
+
+        g = stub.getProduct(store_inventory_pb2.ProductID(id_number=response1.id_number))
+        print(g)
         # list_of_shipped_paid_orders = list(stub.listOrders(store_inventory_pb2.OrderStatus()))
         # print(list_of_shipped_paid_orders)
 

@@ -30,7 +30,7 @@ class ProductInventory(store_inventory_pb2_grpc.ProductInventoryServicer):
         """
         Returns the current product based on product id or name
         """
-        product = self.shared_database.getProductByIDorName(request.id_number, request.name)
+        product = self.shared_database.getProductByIDorName({'id_number': request.id_number, 'name': request.name})
         return self.update_product_fields(product)
 
     def updateProduct(self, request, context):
@@ -54,19 +54,29 @@ class ProductInventory(store_inventory_pb2_grpc.ProductInventoryServicer):
     def update_order_fields(self, order):
         list_of_products = []
         for product_demand in order['products']:
-            product_conversion = store_inventory_pb2.ProductAndDemand(product=store_inventory_pb2.ProductID(id_number=product_demand['productID']), num_of_product=product_demand['number_of_product'])
+            product_conversion = store_inventory_pb2.ProductAndDemand(product=store_inventory_pb2.ProductID(id_number=product_demand['id_number']), num_of_product=product_demand['number_of_product'])
             list_of_products.append(product_conversion)
 
         return store_inventory_pb2.Order(id_number=order['id_number'], destination=order['destination'], date=order['date'], products=list_of_products, is_paid=order['is_paid'], is_shipped=order['is_shipped'])
 
 
-    def addOrder(self, request, context):
+    def get_list_of_products(self, product_list):
         list_of_products = []
-        for product_demand in request.products:
-            product_demand = {'productID': product_demand.product.id_number, 'number_of_product': product_demand.num_of_product}
-            list_of_products.append(product_demand)
-        order_id = self.shared_database.add_order(destination=request.destination, date=request.date, products=list_of_products, is_paid=request.is_paid, is_shipped=request.is_shipped)
+        for product_and_demand in product_list:
+            if product_and_demand.product.id_number:
+                product_id_and_demand = {'id_number': product_and_demand.product.id_number}
+            else:
+                product_id_and_demand = {'name': product_and_demand.product.name}
+            product_id_and_demand['number_of_product'] = product_and_demand.num_of_product
 
+            list_of_products.append(product_and_demand)
+
+        return list_of_products
+
+
+    def addOrder(self, request, context):
+        list_of_products = self.get_list_of_products(request.products)
+        order_id = self.shared_database.add_order(destination=request.destination, date=request.date, products=list_of_products, is_paid=request.is_paid, is_shipped=request.is_shipped)
         return store_inventory_pb2.OrderID(id_number=order_id)
 
     
@@ -75,40 +85,17 @@ class ProductInventory(store_inventory_pb2_grpc.ProductInventoryServicer):
         return self.update_order_fields(order)
 
 
-    def updateOrderHelper(self, request, context):
-        order = self.getOrderHelper(request, context)
-        if request.destination:
-            order.destination = request.destination
-        if request.date:
-            order.date = request.date
-        if request.is_paid:
-            order.is_paid = request.is_paid
-        if request.is_shipped:
-            order.is_shipped = request.is_shipped
-
-        self.order_database[request.id_number] = store_inventory_pb2.Order(destination=order.destination, 
-                                                                           date=order.date,
-                                                                           is_paid=order.is_paid,
-                                                                           is_shipped=order.is_shipped)
-        return order
-
-
     def updateOrder(self, request, context):
-        return self.updateOrderHelper(request, context)
+        order = self.shared_database.update_order(id_number=request.id_number, destination=request.destination, date=request.date, is_shipped=request.is_shipped, is_paid=request.is_paid)
+        return self.update_order_fields(order)
 
 
     def addProductsToOrder(self, request, context):
-        current_order = self.getOrderHelper(request, context)
-       
-       # Fiiiiixxxxxxx
-        products_to_add = self.subtract_product_stock(request.products)
-        for i in range(len(products_to_add)):
-            products_to_add[i].num_of_product += current_order.products[i].num_of_product
+        list_of_products = self.get_list_of_products(request.products)
+        order = self.shared_database.add_products_to_order(request.id_number, list_of_products)
+        return self.update_order_fields(order)
 
-        current_order.products.extend(products_to_add)
-        self.order_database[request.id_number] = current_order 
-        return current_order
-
+#######################################################################################################
 
     def removeProductsFromOrder(self, request, context):
         """Remember to add the stock back in"""

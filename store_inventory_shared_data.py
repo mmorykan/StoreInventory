@@ -23,14 +23,14 @@ class Inventory:
         """
         return name in self.product_name_database
 
-    def getProductByIDorName(self, id_number, name):
+    def getProductByIDorName(self, identifier):
         """
         Determines which database to use to access the product based on given id or name and the gets the product
         """
-        if id_number:
-            product = self.getProductByID(id_number)
+        if identifier['id_number']:
+            product = self.getProductByID(identifier['id_number'])
         else:
-            product = self.getProductByName(name)
+            product = self.getProductByName(identifier['name'])
         return product
 
     def getProductByID(self, id_number):
@@ -115,7 +115,7 @@ class Inventory:
     def subtract_product_stock(self, list_of_product_demand):
         products_to_delete = []
         for product_and_demand in list_of_product_demand:
-            current_product = self.getProductByID(product_and_demand['productID'])
+            current_product = self.getProductByID(product_and_demand['id_number'])
             if current_product['amount_in_stock'] >= product_and_demand['number_of_product']:
                 current_product['amount_in_stock'] -= product_and_demand['number_of_product']
                 self.product_id_database[current_product['id_number']] = current_product
@@ -138,7 +138,44 @@ class Inventory:
         return self.order_database[id_number]
 
 
-    
+    def update_order(self, **order_info):
+        order = self.get_order(order_info['id_number'])
+        if order_info['destination']:
+            order['destination'] = order_info['destination']
+        if order_info['date']:
+            order['date'] = order_info['date']
+        if order_info['is_shipped']:
+            order['is_shipped'] = order_info['is_shipped']
+        if order_info['is_paid']:
+            order['is_paid'] = order_info['is_paid']
+        
+        self.order_database[order_info['id_number']] = order
+        return order
+
+
+    def add_products_to_order(self, id_number, product_list):
+        product_found = False
+        order = self.get_order(id_number)
+        for product_and_demand in product_list:
+            current_product = self.getProductByIDorName(product_and_demand)
+            if current_product['amount_in_stock'] >= product_and_demand['number_of_product']:
+                self.product_id_database[current_product['id_number']]['amount_in_stock'] -= product_and_demand['number_of_product']
+                # self.product_name_database[current_product['name']]['amount_in_stock'] -= product_and_demand['number_of_product']
+                for product in order['products']:
+                    if product['id_number'] == current_product['id_number']:
+                        product_found = True
+                        product['number_of_product'] += product_and_demand['number_of_product']
+
+                if not product_found:
+                    order['products'].append({'id_number': current_product['id_number'], 'number_of_product': product_and_demand['number_of_product']})
+
+        return order
+
+
+    def remove_products_from_order(self, id_number, product_list):
+        pass
+
+
 
 def main():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))    
