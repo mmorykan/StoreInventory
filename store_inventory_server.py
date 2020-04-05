@@ -49,9 +49,11 @@ class ProductInventory(store_inventory_pb2_grpc.ProductInventoryServicer):
             yield self.update_product_fields(product)
 
 
-        ################################################################
-
     def update_order_fields(self, order):
+        """
+        Converts a list of dictionaries of products and demands to a gRPC object of product and demand
+        Returns a gRPC order object
+        """
         list_of_products = []
         for product_demand in order['products']:
             product_conversion = store_inventory_pb2.ProductAndDemand(product=store_inventory_pb2.ProductID(id_number=product_demand['id_number']), num_of_product=product_demand['number_of_product'])
@@ -61,6 +63,9 @@ class ProductInventory(store_inventory_pb2_grpc.ProductInventoryServicer):
 
 
     def get_list_of_products(self, product_list):
+        """
+        Converts gRPC product objects to dicionaries based on the specified identifiers
+        """
         list_of_products = []
         for product_and_demand in product_list:
             if product_and_demand.product.id_number:
@@ -75,22 +80,35 @@ class ProductInventory(store_inventory_pb2_grpc.ProductInventoryServicer):
 
 
     def addOrder(self, request, context):
+        """
+        Add an order which contains a destination, date, list of products and counts, shipped status, and paid status
+        """
         list_of_products = self.get_list_of_products(request.products)
         order_id = self.shared_database.add_order(destination=request.destination, date=request.date, products=list_of_products, is_paid=request.is_paid, is_shipped=request.is_shipped)
         return store_inventory_pb2.OrderID(id_number=order_id)
 
     
     def getOrder(self, request, context):
+        """
+        Receive an order based on the specified id value
+        """
         order = self.shared_database.get_order(request.id_number)
         return self.update_order_fields(order)
 
 
     def updateOrder(self, request, context):
+        """
+        Updates the specified fields for an order.
+        Can update destination, date, shipped status, and paid status
+        """
         order = self.shared_database.update_order(id_number=request.id_number, destination=request.destination, date=request.date, is_shipped=request.is_shipped, is_paid=request.is_paid)
         return self.update_order_fields(order)
 
 
     def addProductsToOrder(self, request, context):
+        """
+        Add products to an existing order or change the amounts of products already in the order
+        """
         list_of_products = self.get_list_of_products(request.products)
         order = self.shared_database.add_products_to_order(request.id_number, list_of_products)
         return self.update_order_fields(order)

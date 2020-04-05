@@ -11,10 +11,7 @@ service ProductInventory {
     rpc addProductsToOrder(AddToOrder) returns (Order);
     rpc removeProductsFromOrder(RemoveFromOrder) returns (Order);
     rpc listProducts(ListProductsInfo) returns (stream Product);
-    // rpc listProductsInStock(Empty) returns (stream Product);
     rpc listOrders(OrderStatus) returns (stream Order);
-
-    // rpc list_Products(Filter) returns (stream Product);
 }
 
 message Product { 

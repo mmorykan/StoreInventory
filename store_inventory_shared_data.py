@@ -113,6 +113,10 @@ class Inventory:
         return product_list
 
     def subtract_product_stock(self, list_of_product_demand):
+        """
+        Subtracts stock from the current product that is being added to an order
+        Does not add a product to an order if the demand is greater than the current stock of the product
+        """
         products_to_delete = []
         for product_and_demand in list_of_product_demand:
             current_product = self.getProductByID(product_and_demand['id_number'])
@@ -128,6 +132,11 @@ class Inventory:
         return list_of_product_demand
 
     def add_order(self, **order_info):
+        """
+        Assigns an id value to an order
+        Creates the order with destination, date, list of products and counts, shipped status, and paid status
+        Returns the order id value
+        """
         id_number = str(uuid.uuid4())
         order_info['id_number'] = id_number
         order_info['products'] = self.subtract_product_stock(order_info['products'])
@@ -135,10 +144,18 @@ class Inventory:
         return id_number
 
     def get_order(self, id_number):
+        """
+        Returns the order with the specified id
+        """
         return self.order_database[id_number]
 
 
     def update_order(self, **order_info):
+        """
+        Updates the given fields of the order. 
+        Cannot update the products of an order.
+        Returns the order
+        """
         order = self.get_order(order_info['id_number'])
         if order_info['destination']:
             order['destination'] = order_info['destination']
@@ -154,6 +171,11 @@ class Inventory:
 
 
     def add_products_to_order(self, id_number, product_list):
+        """
+        Add the product list to the order with the given id.
+        Updates product stock
+        Returns the order 
+        """
         product_found = False
         order = self.get_order(id_number)
         for product_and_demand in product_list:
