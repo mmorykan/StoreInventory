@@ -5,6 +5,7 @@ import store_inventory_server
 # import xml server
 import store_inventory_pb2
 import store_inventory_pb2_grpc
+import pickle
 
 # Need the argparse between clients
 class Inventory:
@@ -13,15 +14,23 @@ class Inventory:
     This file runs both servers and saves the database on termination
     """
 
-    product_id_database = {}
-    product_name_database = {}
-    order_database = {}
+
+    def __init__(self):
+        """
+        Initializes the product id and name databases as well as the order database
+        All databases are shared between both servers
+        """
+        self.product_id_database = {}
+        self.product_name_database = {}
+        self.order_database = {}
+
 
     def invalid_product(self, name):
         """
         Used to check if a product with this name already exists
         """
         return name in self.product_name_database
+
 
     def getProductByIDorName(self, identifier):
         """
@@ -33,12 +42,14 @@ class Inventory:
             product = self.getProductByName(identifier['name'])
         return product
 
+
     def getProductByID(self, id_number):
         """
-        returns the current product from the product id database
+        Returns the current product from the product id database
         """
         product = self.product_id_database[id_number]
         return product
+
 
     def getProductByName(self, name):
         """
@@ -46,6 +57,7 @@ class Inventory:
         """
         product = self.product_name_database[name]
         return product
+
 
     def add_product(self, **product_info):
         """
@@ -59,6 +71,7 @@ class Inventory:
             self.product_id_database[id_number] = product_info
             self.product_name_database[product_info['name']] = product_info
             return id_number
+
 
     def update_product(self, **product_info):
         """
@@ -80,6 +93,7 @@ class Inventory:
         self.product_id_database[product['id_number']] = product
         self.product_id_database[product['name']] = product
         return product
+
 
     def list_products(self, in_stock, manufacturer):
         """
@@ -112,6 +126,7 @@ class Inventory:
 
         return product_list
 
+
     def subtract_product_stock(self, list_of_product_demand):
         """
         Subtracts stock from the current product that is being added to an order
@@ -131,6 +146,7 @@ class Inventory:
 
         return list_of_product_demand
 
+
     def add_order(self, **order_info):
         """
         Assigns an id value to an order
@@ -142,6 +158,7 @@ class Inventory:
         order_info['products'] = self.subtract_product_stock(order_info['products'])
         self.order_database[id_number] = order_info
         return id_number
+
 
     def get_order(self, id_number):
         """
@@ -211,7 +228,6 @@ class Inventory:
                         products_to_remove.append(old_prod_dem)
 
                     self.product_id_database[old_prod_dem['id_number']]['amount_in_stock'] += new_product_and_demand['number_of_product']
-                    print('updated 1')
                     # self.product_name_database[old_prod_dem['name']]['amount_in_stock'] += new_product_and_demand['number_of_product']
 
         for product_and_demand in products_to_remove:
@@ -246,22 +262,52 @@ class Inventory:
                     list_of_orders.append(order)
 
         return list_of_orders
+
+
+def load_database(store_inventory):
+    """
+    Loads the database from the store_inventory_database.py file using pickle
+    If the file is empty, the store_inventory object defaults to empty databases
+    """
+    with open('store_inventory_database.py', 'rb') as load_database:
+        try:
+            product_id_database, product_name_database, order_database = pickle.load(load_database)
+            store_inventory.product_id_database = product_id_database
+            store_inventory.product_name_database = product_name_database
+            store_inventory.order_database = order_database
+        except EOFError:
+            pass
     
 
+def save_database(store_inventory):
+    """
+    Saves the database using pickle when the user terminates the server 
+    The databases are stored in a list when saving them in the store_inventory_database.py file
+    """
+    with open('store_inventory_database.py', 'wb') as save_database:
+            pickle.dump([store_inventory.product_id_database, store_inventory.product_name_database, store_inventory.order_database], save_database)
+
+
 def main():
+    """
+    Starts gRPC and XML-RPC servers on different ports and loads the databases if they are preexisting
+    Saves the databases on termination
+    """
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))    
     store_inventory_pb2_grpc.add_ProductInventoryServicer_to_server(store_inventory_server.ProductInventory(), server)    
 
     server.add_insecure_port('[::]:50052')    
     server.start()
 
+    store_inventory = Inventory()
+    load_database(store_inventory)
+
     # Run XMl
     try:
         server.wait_for_termination()
     except KeyboardInterrupt:
-        # Remember to pickle the database to a file
-        pass
-
+        save_database(store_inventory)
         
 if __name__ == '__main__':
     main()
+

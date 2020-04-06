@@ -1,6 +1,8 @@
 import grpc
 import store_inventory_pb2
 import store_inventory_pb2_grpc
+import argparse
+
 
 def main():
     with grpc.insecure_channel('localhost:50052') as channel:
@@ -133,6 +135,16 @@ def main():
         # # response = stub.getProduct(ProductInfo_pb2.ProductID(value='23'))
         # # print(response.name, response.description)
 
+        parser = argparse.ArgumentParser(description='Client to interact with either the gRPC or XML-RPC store inventory server')
+        subparsers = parser.add_subparsers(title='command', dest='cmd', required=True)
+
+        grpc_server = subparsers.add_parser(name='grpc', description='Interact with the grpc server')
+        grpc_server.add_argument(name='--add')
+
+
+        args = parser.args()
+
+        
 
 if __name__ == '__main__':
     main()

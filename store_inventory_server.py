@@ -5,6 +5,10 @@ import store_inventory_pb2_grpc
 import store_inventory_shared_data
 
 class ProductInventory(store_inventory_pb2_grpc.ProductInventoryServicer):
+    """
+    Class for gRPC server and methods
+    Server is run from store_inventory_shared_data.py 
+    """
 
 
     def __init__(self):
