@@ -5,7 +5,9 @@ import store_inventory_server
 import XML_store_inventory_server
 import store_inventory_pb2
 import store_inventory_pb2_grpc
+from xmlrpc.server import DocXMLRPCServer
 import pickle
+
 
 # Need the argparse between clients
 class Inventory:
@@ -294,17 +296,21 @@ def main():
     Saves the databases on termination
     """
     store_inventory = Inventory()
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))    
-    store_inventory_pb2_grpc.add_ProductInventoryServicer_to_server(store_inventory_server.ProductInventory(store_inventory), server)    
+    grpc_server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))    
+    store_inventory_pb2_grpc.add_ProductInventoryServicer_to_server(store_inventory_server.ProductInventory(store_inventory), grpc_server)    
+    grpc_server.add_insecure_port('[::]:50052')    
+    grpc_server.start()
 
-    server.add_insecure_port('[::]:50052')    
-    server.start()
+    xml_server = DocXMLRPCServer(("", 8000))
+    xml_server.register_introspection_functions()
+    xml_server.register_multicall_functions()
+    xml_server.register_instance(XML_store_inventory_server.XMLProductInventory(store_inventory))
 
     load_database(store_inventory)
 
-    # Run XMl with store_inventory
     try:
-        server.wait_for_termination()
+        grpc_server.wait_for_termination()
+        xml_server.serve_forever()
     except KeyboardInterrupt:
         save_database(store_inventory)
         

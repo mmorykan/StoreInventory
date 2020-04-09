@@ -139,16 +139,16 @@ def main():
 
 
 
-        parser = argparse.ArgumentParser(description='Client to interact with either the gRPC or XML-RPC store inventory server')
-        subparsers = parser.add_subparsers(title='command', dest='cmd', required=True)
+        # parser = argparse.ArgumentParser(description='Client to interact with either the gRPC or XML-RPC store inventory server')
+        # subparsers = parser.add_subparsers(title='command', dest='cmd', required=True)
 
-        # grpc_server = subparsers.add_parser(name='grpc', description='Interact with the grpc server')
-        parser.add_argument('grpc_or_xml', help='Which server to interact with', default='grpc')
-        add = subparsers.add_parser(name='--add', help='Add a product to the inventory database')
+        # # grpc_server = subparsers.add_parser(name='grpc', description='Interact with the grpc server')
+        # parser.add_argument('grpc_or_xml', help='Which server to interact with', default='grpc')
+        # add = subparsers.add_parser(name='--add', help='Add a product to the inventory database')
 
         
 
-        args = parser.args()
+        # args = parser.args()
 
         
 
