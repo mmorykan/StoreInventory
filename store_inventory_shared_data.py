@@ -2,7 +2,7 @@ from concurrent import futures
 import grpc
 import uuid
 import store_inventory_server
-# import xml server
+import XML_store_inventory_server
 import store_inventory_pb2
 import store_inventory_pb2_grpc
 import pickle
