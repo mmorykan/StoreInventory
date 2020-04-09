@@ -10,12 +10,11 @@ class ProductInventory(store_inventory_pb2_grpc.ProductInventoryServicer):
     Server is run from store_inventory_shared_data.py 
     """
 
-
-    def __init__(self):
+    def __init__(self, shared_database):
         """
         Initializes the inventory object for the shared database
         """
-        self.shared_database = store_inventory_shared_data.Inventory()
+        self.shared_database = shared_database
 
 
     def update_product_fields(self, product):
@@ -33,6 +32,8 @@ class ProductInventory(store_inventory_pb2_grpc.ProductInventoryServicer):
         valid_id = self.shared_database.add_product(name=request.name, description=request.description, manufacturer=request.manufacturer, wholesale_cost=request.wholesale_cost, sale_cost=request.sale_cost, amount_in_stock=request.amount_in_stock)
         if valid_id:
             return store_inventory_pb2.ProductID(id_number=valid_id, name=request.name)
+        else:
+            return store_inventory_pb2.ProductID()
 
 
     def getProduct(self, request, context):

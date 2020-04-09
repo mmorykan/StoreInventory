@@ -13,7 +13,7 @@ def main():
         response1 = stub.addProduct(store_inventory_pb2.Product(name='some', description='its a widget', manufacturer='yes', wholesale_cost=1.23, amount_in_stock=5))
         print(response1)
 
-        response2 = stub.addProduct(store_inventory_pb2.Product(name='sup', description='is someting', manufacturer='maaccccc', wholesale_cost=5.6, sale_cost=4.8, amount_in_stock=9))
+        response2 = stub.addProduct(store_inventory_pb2.Product(name='sup', manufacturer='maaccccc', wholesale_cost=5.6, sale_cost=4.8, amount_in_stock=9))
         print(response2)
 
         response3 = stub.addProduct(store_inventory_pb2.Product(name='new', description='n', manufacturer='mak', amount_in_stock=55))
@@ -135,12 +135,18 @@ def main():
         # # response = stub.getProduct(ProductInfo_pb2.ProductID(value='23'))
         # # print(response.name, response.description)
 
+
+
+
+
         parser = argparse.ArgumentParser(description='Client to interact with either the gRPC or XML-RPC store inventory server')
         subparsers = parser.add_subparsers(title='command', dest='cmd', required=True)
 
-        grpc_server = subparsers.add_parser(name='grpc', description='Interact with the grpc server')
-        grpc_server.add_argument(name='--add')
+        # grpc_server = subparsers.add_parser(name='grpc', description='Interact with the grpc server')
+        parser.add_argument('grpc_or_xml', help='Which server to interact with', default='grpc')
+        add = subparsers.add_parser(name='--add', help='Add a product to the inventory database')
 
+        
 
         args = parser.args()
 

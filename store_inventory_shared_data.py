@@ -65,7 +65,7 @@ class Inventory:
         """
         id_number = str(uuid.uuid4())
         if self.invalid_product(product_info['name']):
-            return ''
+            return 
         else:
             product_info['id_number'] = id_number
             self.product_id_database[id_number] = product_info
@@ -269,7 +269,7 @@ def load_database(store_inventory):
     Loads the database from the store_inventory_database.py file using pickle
     If the file is empty, the store_inventory object defaults to empty databases
     """
-    with open('store_inventory_database.py', 'rb') as load_database:
+    with open('store_inventory_database.bin', 'rb') as load_database:
         try:
             product_id_database, product_name_database, order_database = pickle.load(load_database)
             store_inventory.product_id_database = product_id_database
@@ -284,7 +284,7 @@ def save_database(store_inventory):
     Saves the database using pickle when the user terminates the server 
     The databases are stored in a list when saving them in the store_inventory_database.py file
     """
-    with open('store_inventory_database.py', 'wb') as save_database:
+    with open('store_inventory_database.bin', 'wb') as save_database:
             pickle.dump([store_inventory.product_id_database, store_inventory.product_name_database, store_inventory.order_database], save_database)
 
 
@@ -293,16 +293,16 @@ def main():
     Starts gRPC and XML-RPC servers on different ports and loads the databases if they are preexisting
     Saves the databases on termination
     """
+    store_inventory = Inventory()
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))    
-    store_inventory_pb2_grpc.add_ProductInventoryServicer_to_server(store_inventory_server.ProductInventory(), server)    
+    store_inventory_pb2_grpc.add_ProductInventoryServicer_to_server(store_inventory_server.ProductInventory(store_inventory), server)    
 
     server.add_insecure_port('[::]:50052')    
     server.start()
 
-    store_inventory = Inventory()
     load_database(store_inventory)
 
-    # Run XMl
+    # Run XMl with store_inventory
     try:
         server.wait_for_termination()
     except KeyboardInterrupt:
