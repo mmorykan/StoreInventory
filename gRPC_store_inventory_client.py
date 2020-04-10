@@ -1,13 +1,14 @@
-from xmlrpc.client import ServerProxy
+import grpc
+import gRPC_store_inventory_pb2
+import gRPC_store_inventory_pb2_grpc
+
+CHANNEL = grpc.insecure_channel('localhost:50052')
 
 
-class xmlrpcStoreInventoryClient:
-    """
-    XML-RPC client to demonstrate all functions withing the XML-RPC server 
-    """
+class grpcStoreInventoryClient:
 
     def __init__(self):
-        self.client = ServerProxy('http://localhost:8000', allow_none=True)
+        self.client = gRPC_store_inventory_pb2_grpc.ProductInventoryStub(CHANNEL)
 
     
     def addProduct(self, name, description, manufacturer, wholesale_cost, sale_cost, amount_in_stock):
@@ -67,4 +68,6 @@ class xmlrpcStoreInventoryClient:
     def listOrders(self, is_shipped, is_paid):
         list_of_orders = self.client.listOrders(is_shipped, is_paid)
         print(list_of_orders)
+
+    # CHANNEL.close()
 

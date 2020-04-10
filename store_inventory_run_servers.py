@@ -1,15 +1,14 @@
 from concurrent import futures
 import grpc
 import uuid
-import store_inventory_server
+import gRPC_store_inventory_server
 import XML_store_inventory_server
-import store_inventory_pb2
-import store_inventory_pb2_grpc
+# import gRPC_store_inventory_pb2
+import gRPC_store_inventory_pb2_grpc
 from xmlrpc.server import DocXMLRPCServer
 import pickle
 
 
-# Need the argparse between clients
 class Inventory:
     """
     All shared utility functions for both gRPC and XML-RPC servers and their inventory database
@@ -79,7 +78,11 @@ class Inventory:
         """
         Updates any given field for a product except the products id number and name
         """
-        product = self.getProductByIDorName(product_info['id_number'], product_info['name'])
+        # product = self.getProductByIDorName(product_info['id_number'], product_info['name'])
+        if product_info['id_number']:
+            product = self.getProductByID(product_info['id_number'])
+        else:
+            product = self.getProductByName(product_info['name'])
         
         if product_info['description']:
             product['description'] = product_info['description']
@@ -102,19 +105,19 @@ class Inventory:
         List all products based on whether or not they are in stock and/or the manufacturer or just list all total products
         """
         product_list = []
-        if in_stock == 1 and manufacturer:
+        if in_stock == 'T' and manufacturer:
             for product in self.product_id_database.values():
                 if product['amount_in_stock'] > 0 and product['manufacturer'] == manufacturer:
                     product_list.append(product)
-        elif in_stock == 1:
+        elif in_stock == 'T':
             for product in self.product_id_database.values():
                 if product['amount_in_stock'] > 0:
                     product_list.append(product)
-        elif in_stock == -1 and manufacturer:
+        elif in_stock == 'F' and manufacturer:
             for product in self.product_id_database.values():
                 if product['amount_in_stock'] == 0 and product['manufacturer'] == manufacturer:
                     product_list.append(product)
-        elif in_stock == -1:
+        elif in_stock == 'F':
             for product in self.product_id_database.values():
                 if product['amount_in_stock'] == 0:
                     product_list.append(product)
@@ -245,24 +248,25 @@ class Inventory:
         Returns a list of orders
         """
         list_of_orders = []
-        if is_shipped == 0 and is_paid == 0:
-            list_of_orders = self.order_database.values()
+        # if is_shipped is None and is_paid is None:
+        #     list_of_orders = self.order_database.values()
 
-        elif is_shipped != 0 and is_paid == 0:
-            for order in self.order_database.values():
-                if order['is_shipped'] == is_shipped:
-                    list_of_orders.append(order)
+        # elif is_shipped is not None and is_paid is None:
+        #     for order in self.order_database.values():
+        #         if order['is_shipped'] == is_shipped:
+        #             list_of_orders.append(order)
 
-        elif is_paid != 0 and is_shipped == 0:
-            for order in self.order_database.values():
-                if order['is_paid'] == is_paid:
-                    list_of_orders.append(order)
+        # elif is_paid is not None and is_shipped is None:
+        #     for order in self.order_database.values():
+        #         if order['is_paid'] == is_paid:
+        #             list_of_orders.append(order)
 
-        else:
-            for order in self.order_database.values():
-                if order['is_shipped'] == is_shipped and order['is_paid'] == is_paid:
-                    list_of_orders.append(order)
-
+        # else:
+        for order in self.order_database.values():
+            print(order)
+            if order['is_shipped'] == is_shipped and order['is_paid'] == is_paid:
+                list_of_orders.append(order)
+        print(list_of_orders)
         return list_of_orders
 
 
@@ -297,23 +301,26 @@ def main():
     """
     store_inventory = Inventory()
     grpc_server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))    
-    store_inventory_pb2_grpc.add_ProductInventoryServicer_to_server(store_inventory_server.ProductInventory(store_inventory), grpc_server)    
+    gRPC_store_inventory_pb2_grpc.add_ProductInventoryServicer_to_server(gRPC_store_inventory_server.ProductInventory(store_inventory), grpc_server)    
     grpc_server.add_insecure_port('[::]:50052')    
     grpc_server.start()
 
-    xml_server = DocXMLRPCServer(("", 8000))
-    xml_server.register_introspection_functions()
-    xml_server.register_multicall_functions()
-    xml_server.register_instance(XML_store_inventory_server.XMLProductInventory(store_inventory))
-
-    load_database(store_inventory)
-
-    try:
-        grpc_server.wait_for_termination()
-        xml_server.serve_forever()
-    except KeyboardInterrupt:
-        save_database(store_inventory)
+    with DocXMLRPCServer(('', 8000)) as xml_server:
+        xml_server.register_introspection_functions()
+        xml_server.register_multicall_functions()
+        xml_server.register_instance(XML_store_inventory_server.XMLProductInventory(store_inventory))
         
+        load_database(store_inventory)
+
+        try:
+            xml_server.serve_forever()
+            grpc_server.wait_for_termination()
+            
+        except KeyboardInterrupt:
+            # save_database(store_inventory)
+            pass
+        
+    
 if __name__ == '__main__':
     main()
 

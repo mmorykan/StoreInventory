@@ -34,8 +34,8 @@ message Order {
     string destination = 2;
     string date = 3;
     repeated ProductAndDemand products = 4;
-    int32 is_paid = 5;
-    int32 is_shipped = 6;
+    string is_paid = 5;
+    string is_shipped = 6;
 }
 
 message ProductID { 
@@ -62,8 +62,8 @@ message UpdateOrderInfo {
     string id_number = 1;
     string destination = 2;
     string date = 3;
-    int32 is_paid = 5;
-    int32 is_shipped = 6;
+    string is_paid = 5;
+    string is_shipped = 6;
 }
 
 message AddToOrder {
@@ -77,13 +77,13 @@ message RemoveFromOrder {
 }
 
 message OrderStatus {
-    int32 is_shipped = 1;
-    int32 is_paid = 2;
+    string is_shipped = 1;
+    string is_paid = 2;
 }
 
 message ListProductsInfo {
     string manufacturer = 1;
-    int32 in_stock = 2;
+    string in_stock = 2;
 }
 
 message Empty {

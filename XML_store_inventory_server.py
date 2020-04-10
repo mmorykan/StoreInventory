@@ -1,10 +1,5 @@
-from concurrent import futures
-import uuid
-import store_inventory_shared_data
+# import store_inventory_shared_data
 
-
-#product info is a dictionary 
-#** makes a dictionary of those fields
 
 class XMLProductInventory():
     """
@@ -18,11 +13,19 @@ class XMLProductInventory():
         Initializes the inventory object for the shared database
         """
         self.shared_database = store_inventory
-        print('working')
 
 
-    # @server.register_function()
-    def add_product(self, id_number, name, description, manufacturer, wholesale_cost, sale_cost, stock):
+    def get_list_of_products(self, products):
+        list_of_products = []
+        for product_id in range(0, len(products) - 1, 2):
+            print(product_id)
+            product_dict = {'id_number': products[product_id], 'number_of_product': int(products[product_id + 1])}
+            list_of_products.append(product_dict)
+
+        return list_of_products
+
+
+    def addProduct(self, name, description='', manufacturer='', wholesale_cost=-1, sale_cost=-1, stock=0):
         """
         Adds a product to the product id and name databases as well as obtains a unique id for the new product
         Returns a product id            
@@ -34,17 +37,15 @@ class XMLProductInventory():
             return "A product with that name already exists"
 
         
-    # @server.register_function()
-    def getProduct(self, identifier):
+    def getProduct(self, id_number='', name=''):
         """
         Returns the current product based on product id or name
         Returns a product
         """
-        return self.shared_database.getProductByIDorName(identifier)
+        return self.shared_database.getProductByIDorName({'id_number': id_number, 'name': name})
          
 
-    # @server.register_function()
-    def updateProduct(self, id_number, name, description, manufacturer, wholesale_cost, sale_cost, amount_in_stock):
+    def updateProduct(self, id_number=None, name=None, description=None, manufacturer=None, wholesale_cost=None, sale_cost=None, amount_in_stock=None):
         """
         Update the specified fields for the given project. Can update every field except product id and name
         Returns a product
@@ -53,26 +54,31 @@ class XMLProductInventory():
         return product
         
 
-    # @server.register_function()
     def listProducts(self, in_stock, manufacturer):
         """
         Lists all total products or just the products in stock and/or produced by a specified manufacturer
         Yields all appropriate products
         """
+        if in_stock is None:
+            in_stock = 0
+        elif in_stock == 'True':
+            in_stock = 1
+        else:
+            in_stock = -1
         return self.shared_database.list_products(in_stock, manufacturer)
         
 
-    # @server.register_function()
-    def addOrder(self, destination, date, products, is_paid, is_shipped):
+    def addOrder(self, destination, date, product_list, is_paid, is_shipped):
         """
         Add an order which contains a destination, date, list of products and counts, shipped status, and paid status
         Returns an order id
         """
-        # Make sure to configure product list
-        return self.shared_database.add_order(destination=destination, date=date, products=products, is_paid=is_paid, is_shipped=is_shipped)
+
+        list_of_products = self.get_list_of_products(product_list)
+        print(list_of_products)
+        return self.shared_database.add_order(destination=destination, date=date, products=list_of_products, is_paid=is_paid, is_shipped=is_shipped)
 
 
-    # @server.register_function()
     def getOrder(self, id_number):
         """
         Receive an order based on the specified id value
@@ -81,7 +87,6 @@ class XMLProductInventory():
         return self.shared_database.get_order(id_number)
 
 
-    # @server.register_function()
     def updateOrder(self, id_number, destination, date, is_paid, is_shipped):
         """
         Updates the specified fields for an order.
@@ -91,28 +96,25 @@ class XMLProductInventory():
         return self.shared_database.update_order(id_number = id_number, destination = destination, date = date, is_paid = is_paid, is_shipped = is_shipped)
 
 
-    # @server.register_function()
     def addProductsToOrder(self, id_number, product_list):
         """
         Add products to an existing order or increase the amounts of existing products already in the order
         Returns an order
         """
-        # Configure product list
-        return self.shared_database.add_products_to_order(id_number, product_list)
+        list_of_products = self.get_list_of_products(product_list)
+        return self.shared_database.add_products_to_order(id_number, list_of_products)
         
 
-    # @server.register_function()
     def removeProductsFromOrder(self, id_number, product_list):
         """
         Removes products from an order specified by the order id or decrease the amounts of existing products within the order
         Returns an order
         """
-        #Configure product list
-        return self.shared_database.remove_products_from_order(id_number, product_list)
+        list_of_products = self.get_list_of_products(product_list)
+        return self.shared_database.remove_products_from_order(id_number, list_of_products)
 
 
-    # @server.register_function()
-    def list_orders(self, is_shipped, is_paid):
+    def listOrders(self, is_shipped, is_paid):
         """
         Lists all the orders based on shipped status and paid status
         Yields all appropriate orders

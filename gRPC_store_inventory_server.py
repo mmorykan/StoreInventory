@@ -1,10 +1,9 @@
 import grpc
-import uuid
-import store_inventory_pb2
-import store_inventory_pb2_grpc
-import store_inventory_shared_data
+import gRPC_store_inventory_pb2
+import gRPC_store_inventory_pb2_grpc
 
-class ProductInventory(store_inventory_pb2_grpc.ProductInventoryServicer):
+
+class ProductInventory(gRPC_store_inventory_pb2_grpc.ProductInventoryServicer):
     """
     Class for gRPC server and methods
     Server is run from store_inventory_shared_data.py 
@@ -21,7 +20,7 @@ class ProductInventory(store_inventory_pb2_grpc.ProductInventoryServicer):
         """
         Creates and returns the gRPC product object from the given product
         """
-        return store_inventory_pb2.Product(id_number=product['id_number'], name=product['name'], description=product['description'], manufacturer=product['manufacturer'], wholesale_cost=product['wholesale_cost'], sale_cost=product['sale_cost'], amount_in_stock=product['amount_in_stock'])
+        return gRPC_store_inventory_pb2.Product(id_number=product['id_number'], name=product['name'], description=product['description'], manufacturer=product['manufacturer'], wholesale_cost=product['wholesale_cost'], sale_cost=product['sale_cost'], amount_in_stock=product['amount_in_stock'])
 
 
     def addProduct(self, request, context):
@@ -31,9 +30,9 @@ class ProductInventory(store_inventory_pb2_grpc.ProductInventoryServicer):
         """
         valid_id = self.shared_database.add_product(name=request.name, description=request.description, manufacturer=request.manufacturer, wholesale_cost=request.wholesale_cost, sale_cost=request.sale_cost, amount_in_stock=request.amount_in_stock)
         if valid_id:
-            return store_inventory_pb2.ProductID(id_number=valid_id, name=request.name)
+            return gRPC_store_inventory_pb2.ProductID(id_number=valid_id, name=request.name)
         else:
-            return store_inventory_pb2.ProductID()
+            return gRPC_store_inventory_pb2.ProductID()
 
 
     def getProduct(self, request, context):
@@ -71,10 +70,10 @@ class ProductInventory(store_inventory_pb2_grpc.ProductInventoryServicer):
         """
         list_of_products = []
         for product_demand in order['products']:
-            product_conversion = store_inventory_pb2.ProductAndDemand(product=store_inventory_pb2.ProductID(id_number=product_demand['id_number']), num_of_product=product_demand['number_of_product'])
+            product_conversion = gRPC_store_inventory_pb2.ProductAndDemand(product=gRPC_store_inventory_pb2.ProductID(id_number=product_demand['id_number']), num_of_product=product_demand['number_of_product'])
             list_of_products.append(product_conversion)
 
-        return store_inventory_pb2.Order(id_number=order['id_number'], destination=order['destination'], date=order['date'], products=list_of_products, is_paid=order['is_paid'], is_shipped=order['is_shipped'])
+        return gRPC_store_inventory_pb2.Order(id_number=order['id_number'], destination=order['destination'], date=order['date'], products=list_of_products, is_paid=order['is_paid'], is_shipped=order['is_shipped'])
 
 
     def get_list_of_products(self, product_list):
@@ -102,7 +101,7 @@ class ProductInventory(store_inventory_pb2_grpc.ProductInventoryServicer):
         """
         list_of_products = self.get_list_of_products(request.products)
         order_id = self.shared_database.add_order(destination=request.destination, date=request.date, products=list_of_products, is_paid=request.is_paid, is_shipped=request.is_shipped)
-        return store_inventory_pb2.OrderID(id_number=order_id)
+        return gRPC_store_inventory_pb2.OrderID(id_number=order_id)
 
     
     def getOrder(self, request, context):
