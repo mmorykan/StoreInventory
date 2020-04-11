@@ -21,6 +21,7 @@ def get_client(server, address, port):
 
 
 def product_fields(subparser):
+    # All product fields
     subparser.add_argument('description', help='The description of product')
     subparser.add_argument('manufacturer', help='The manufacturer of product')
     subparser.add_argument('wholesale_cost', type=float, help='The wholesale cost of the product')
@@ -29,6 +30,7 @@ def product_fields(subparser):
 
 
 def optional_product_fields(subparser):
+    # All update product fields
     subparser.add_argument('--description', help='The description of product')
     subparser.add_argument('--manufacturer', help='The manufacturer of product')
     subparser.add_argument('--wholesale_cost', type=float, help='The wholesale cost of the product')
@@ -37,6 +39,7 @@ def optional_product_fields(subparser):
 
 
 def order_fields(subparser):
+    # All order fields
     subparser.add_argument('destination', help='The destination of the order')
     subparser.add_argument('date', help='The date the order is to be shipped')
     subparser.add_argument('is_shipped', help='Whether or not the order has been shipped')
@@ -44,6 +47,7 @@ def order_fields(subparser):
 
 
 def optional_order_fields(subparser):
+    # All update order fields
     subparser.add_argument('--destination', help='The destination of the order')
     subparser.add_argument('--date', help='The date the order is to be shipped')
     subparser.add_argument('--is_shipped', help='Whether or not the order has been shipped')
@@ -52,7 +56,7 @@ def optional_order_fields(subparser):
 
 def main():
     """
-    All argparse for the client to interact with
+    All argparse for the user to interact with fron the command line
     """
 
     # Set up address and port and determine gRPC or XML-RPC server connection
@@ -93,7 +97,6 @@ def main():
     list_products.add_argument('--manufacturer', help='The product manufacturer to search for')
     list_products.add_argument('--in_stock', help='Whether or not the product is in stock', default='T')
 
-
     ##### Order Argparsing #####
 
     # Add an order 
@@ -122,8 +125,8 @@ def main():
 
     # List all orders. Orders can be queries by shipped status and paid status
     list_orders = subparsers.add_parser(name='list-orders', help='List all orders based on shipped status and paid status')
-    list_orders.add_argument('--is_shipped', help='Whether or not the order has been shipped', default='T')
-    list_orders.add_argument('--is_paid', help='Whether or not the order has been paid', default='T')
+    list_orders.add_argument('--is_shipped', help='Whether or not the order has been shipped')
+    list_orders.add_argument('--is_paid', help='Whether or not the order has been paid')
 
     args = parser.parse_args()
 

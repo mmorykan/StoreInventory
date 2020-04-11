@@ -5,8 +5,8 @@ import gRPC_store_inventory_pb2 as gRPC__store__inventory__pb2
 
 
 class ProductInventoryStub(object):
-  # missing associated documentation comment in .proto file
-  pass
+  """All functions specific to the gRPC server 
+  """
 
   def __init__(self, channel):
     """Constructor.
@@ -72,82 +72,119 @@ class ProductInventoryStub(object):
 
 
 class ProductInventoryServicer(object):
-  # missing associated documentation comment in .proto file
-  pass
+  """All functions specific to the gRPC server 
+  """
 
   def determineSuccessfulConnection(self, request, context):
-    # missing associated documentation comment in .proto file
-    pass
+    """
+    Determines a successful Connection between client and server
+    Parameter: Empty
+    Returns: Empty
+    """
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
   def addProduct(self, request, context):
-    # missing associated documentation comment in .proto file
-    pass
+    """
+    Add a product to the database
+    Parameter: Product
+    Returns: ProductID
+    """
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
   def addOrder(self, request, context):
-    # missing associated documentation comment in .proto file
-    pass
+    """
+    Add an order to the database
+    Parameter: Order
+    Returns: OrderID
+    """
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
   def getProduct(self, request, context):
-    # missing associated documentation comment in .proto file
-    pass
+    """
+    Get a product from the database by specifying either the product's id value or the product's name
+    Parameter: ProductID
+    Returns: Product
+    """
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
   def getOrder(self, request, context):
-    # missing associated documentation comment in .proto file
-    pass
+    """
+    Get an order from the database by specifying the order's id value
+    Parameter: OrderID
+    Returns: Order
+    """
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
   def updateProduct(self, request, context):
-    # missing associated documentation comment in .proto file
-    pass
+    """
+    Update a product currently in the database, denoting it by either its id value or its name
+    Parameter: UpdateProductInfo
+    Returns: Product
+    """
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
   def updateOrder(self, request, context):
-    # missing associated documentation comment in .proto file
-    pass
+    """
+    Update an order currently in the database, denoting it by its id value
+    Parameter: UpdateOrderInfo
+    Returns: Order
+    """
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
   def addProductsToOrder(self, request, context):
-    # missing associated documentation comment in .proto file
-    pass
+    """
+    Add products currently in the database to an order or add to the quantity of a product already in an order
+    This will update the products stock automatically 
+    Parameter: AddToOrder
+    Returns: Order
+    """
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
   def removeProductsFromOrder(self, request, context):
-    # missing associated documentation comment in .proto file
-    pass
+    """
+    Remove products from a order or remove quantities of products already in an order.
+    This will update the products stock automatically
+    Parameter: RemoveFromOrder
+    Returns: Order
+    """
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
   def listProducts(self, request, context):
-    # missing associated documentation comment in .proto file
-    pass
+    """
+    List all products currently in the database.
+    The list of products can be narrowed down by specifying if product are in stock and/or the manufacturer
+    Parameter: ListProductsInfo
+    Returns: Stream of Product
+    """
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
   def listOrders(self, request, context):
-    # missing associated documentation comment in .proto file
-    pass
+    """
+    List all orders currently in the database.
+    The list of orders can be narrowed down by shipped status and/or paid status of the orders
+    Parameter: OrderStatus
+    Returns: Stream of Order
+    """
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')

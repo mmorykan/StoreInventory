@@ -23,7 +23,8 @@ class Inventory:
         self.product_id_database = {}
         self.product_name_database = {}
         self.order_database = {}
-
+        self.null_product = {'id_number': 'null product', 'name': 'Product does not exist', 'description': 'Product does not exist', 'manufacturer': 'Product does not exist', 'wholesale_cost': -1, 'sale_cost': -1, 'amount_in_stock': -1}
+        self.null_order = {'id_number': 'null order', 'destination': 'Order does not exist', 'date': 'Order does not exist', 'products': [], 'is_shipped': 'F', 'is_paid': 'F'}
 
     def invalid_product(self, name):
         """
@@ -47,7 +48,11 @@ class Inventory:
         """
         Returns the current product from the product id database
         """
-        product = self.product_id_database[id_number]
+        try:
+            product = self.product_id_database[id_number]
+        except:
+            product = self.null_product
+
         return product
 
 
@@ -55,7 +60,10 @@ class Inventory:
         """
         returns the current product from the product name database
         """
-        product = self.product_name_database[name]
+        try:
+            product = self.product_name_database[name]
+        except:
+            product = self.null_product
         return product
 
 
@@ -82,6 +90,8 @@ class Inventory:
         else:
             product = self.getProductByName(product_info['name'])
         
+        if product == self.null_product:
+            return product
         if product_info['description']:
             product['description'] = product_info['description']
         if product_info['manufacturer']:
@@ -102,29 +112,30 @@ class Inventory:
         List all products based on whether or not they are in stock and/or the manufacturer or just list all total products
         """
         product_list = []
+
         if in_stock == 'T' and manufacturer:
             for product in self.product_id_database.values():
                 if product['amount_in_stock'] > 0 and product['manufacturer'] == manufacturer:
                     product_list.append(product)
+
         elif in_stock == 'T':
             for product in self.product_id_database.values():
                 if product['amount_in_stock'] > 0:
                     product_list.append(product)
+
         elif in_stock == 'F' and manufacturer:
             for product in self.product_id_database.values():
                 if product['amount_in_stock'] == 0 and product['manufacturer'] == manufacturer:
                     product_list.append(product)
+
         elif in_stock == 'F':
             for product in self.product_id_database.values():
                 if product['amount_in_stock'] == 0:
                     product_list.append(product)
-        elif manufacturer:
-            for product in self.product_id_database.values():
-                if product['manufacturer'] == manufacturer:
-                    product_list.append(product)
+
         else:
             for product in self.product_id_database.values():
-                product_list.append(product)
+                product.append(product)
 
         return product_list
 
@@ -140,7 +151,7 @@ class Inventory:
             if current_product['amount_in_stock'] >= product_and_demand['number_of_product']:
                 current_product['amount_in_stock'] -= product_and_demand['number_of_product']
                 self.product_id_database[current_product['id_number']] = current_product
-                self.product_name_database[current_product['name']] = current_product
+                # self.product_name_database[current_product['name']] = current_product
             else:
                 products_to_delete.append(product_and_demand)
         for product in products_to_delete:
@@ -166,7 +177,12 @@ class Inventory:
         """
         Returns the order with the specified id
         """
-        return self.order_database[id_number]
+        try:
+            order = self.order_database[id_number]
+        except:
+            order = self.null_order
+
+        return order
 
 
     def update_order(self, **order_info):
@@ -175,7 +191,11 @@ class Inventory:
         Cannot update the products of an order.
         Returns the order
         """
-        order = self.get_order(order_info['id_number'])
+        try:
+            order = self.get_order(order_info['id_number'])
+        except:
+            return self.null_order
+
         if order_info['destination']:
             order['destination'] = order_info['destination']
         if order_info['date']:
@@ -195,12 +215,20 @@ class Inventory:
         Updates product stocks
         Returns the order 
         """
-        product_found = False
         order = self.get_order(id_number)
+        if order == self.null_order:
+            return order 
+
         for product_and_demand in product_list:
+            product_found = False
+
             current_product = self.getProductByIDorName(product_and_demand)
+            if current_product == self.null_product:
+                continue
+
             if current_product['amount_in_stock'] >= product_and_demand['number_of_product']:
                 self.product_id_database[current_product['id_number']]['amount_in_stock'] -= product_and_demand['number_of_product']
+
                 for product in order['products']:
                     if product['id_number'] == current_product['id_number']:
                         product_found = True
@@ -220,6 +248,9 @@ class Inventory:
         """
         products_to_remove = []
         order = self.get_order(id_number)
+        if order == self.null_order:
+            return order 
+
         for new_product_and_demand in product_list:
             for old_prod_dem in order['products']:
                 if old_prod_dem['id_number'] == new_product_and_demand['id_number']:
@@ -243,6 +274,20 @@ class Inventory:
         Returns a list of orders
         """
         list_of_orders = []
+
+        if is_shipped == '' and is_paid == '':
+            for order in self.order_database.values():
+                list_of_orders.append(order)
+            
+        elif is_shipped != '' and is_paid == '':
+            for order in self.order_database.values():
+                if order['is_shipped'] == is_shipped:
+                    list_of_orders.append(order)
+
+        elif is_shipped == '' and is_paid != '':
+            for order in self.order_database.values():
+                if order['is_paid'] == is_paid:
+                    list_of_orders.append(order)
 
         for order in self.order_database.values():
             if order['is_shipped'] == is_shipped and order['is_paid'] == is_paid:
@@ -299,8 +344,6 @@ def main():
             
         except KeyboardInterrupt:
             save_database(store_inventory)
-            pass
-        
     
 if __name__ == '__main__':
     main()

@@ -14,6 +14,9 @@ class XMLProductInventory():
 
 
     def determine_successful_connection(self):
+        """
+        Determines if the client can successfully connect to this server 
+        """
         return True
 
 
@@ -42,7 +45,7 @@ class XMLProductInventory():
             return "A product with that name already exists"
 
         
-    def getProduct(self, id_number='', name=''):
+    def getProduct(self, id_number, name=''):
         """
         Returns the current product based on product id or name
         Returns a product
@@ -64,12 +67,6 @@ class XMLProductInventory():
         Lists all total products or just the products in stock and/or produced by a specified manufacturer
         Yields all appropriate products
         """
-        if in_stock is None:
-            in_stock = 0
-        elif in_stock == 'True':
-            in_stock = 1
-        else:
-            in_stock = -1
         return self.shared_database.list_products(in_stock, manufacturer)
         
 
@@ -92,13 +89,13 @@ class XMLProductInventory():
         return self.shared_database.get_order(id_number)
 
 
-    def updateOrder(self, id_number, destination, date, is_paid, is_shipped):
+    def updateOrder(self, id_number, destination, date, is_shipped, is_paid):
         """
         Updates the specified fields for an order.
         Can update destination, date, shipped status, and paid status
         Returns an order
         """
-        return self.shared_database.update_order(id_number = id_number, destination = destination, date = date, is_paid = is_paid, is_shipped = is_shipped)
+        return self.shared_database.update_order(id_number=id_number, destination=destination, date=date, is_paid=is_paid, is_shipped=is_shipped)
 
 
     def addProductsToOrder(self, id_number, product_list):

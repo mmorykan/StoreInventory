@@ -17,7 +17,9 @@ class ProductInventory(gRPC_store_inventory_pb2_grpc.ProductInventoryServicer):
 
     
     def determineSuccessfulConnection(self, request, context):
-        print('made it to function')
+        """
+        Determines if the client can successfully connect to this server 
+        """
         return gRPC_store_inventory_pb2.Empty()
 
 

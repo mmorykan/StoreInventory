@@ -10,7 +10,7 @@ class xmlrpcStoreInventoryClient:
         """
         Creates the xml-rpc client, connecting it to the server through the given IP and port
         """
-        self.client = ServerProxy(f'http://{address}:{port}', allow_none=True)
+        self.client = ServerProxy(f'http://{address}:{port}', allow_none=True)  # allow_none allows None to be passed as an argument
 
 
     def successful_connection(self):

@@ -2,6 +2,8 @@ syntax = "proto3";
 package ecommerce;
 
 service ProductInventory { 
+    // All functions specific to the gRPC server 
+
     /* 
     Determines a successful Connection between client and server
     Parameter: Empty
@@ -115,7 +117,6 @@ message ProductID {
     // A Product can be specified by either the id value or the name, therefore, only one must be provided
     string id_number = 1;      // The id value of the product assigned by the server (str)
     string name = 2;           // The name of the product (str)
-    // string manufacturer = 3;
 }
 
 message OrderID {
