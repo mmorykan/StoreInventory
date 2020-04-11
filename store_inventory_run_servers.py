@@ -298,7 +298,7 @@ def main():
             grpc_server.wait_for_termination()
             
         except KeyboardInterrupt:
-            # save_database(store_inventory)
+            save_database(store_inventory)
             pass
         
     

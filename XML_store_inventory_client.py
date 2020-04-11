@@ -1,4 +1,5 @@
 from xmlrpc.client import ServerProxy
+import xmlrpc.client
 
 
 class xmlrpcStoreInventoryClient:
@@ -11,6 +12,13 @@ class xmlrpcStoreInventoryClient:
         Creates the xml-rpc client, connecting it to the server through the given IP and port
         """
         self.client = ServerProxy(f'http://{address}:{port}', allow_none=True)
+
+
+    def successful_connection(self):
+        try:
+            return self.client.determine_successful_connection()
+        except Exception:
+            return False
 
     
     def addProduct(self, name, description, manufacturer, wholesale_cost, sale_cost, amount_in_stock):
@@ -29,7 +37,7 @@ class xmlrpcStoreInventoryClient:
 
 
     def updateProductById(self, id_number, description, manufacturer, wholesale_cost, sale_cost, amount_in_stock):
-        product = self.client.updateProduct(id_number, description, manufacturer, wholesale_cost, sale_cost, amount_in_stock)
+        product = self.client.updateProduct(id_number, '', description, manufacturer, wholesale_cost, sale_cost, amount_in_stock)
         print(product)
 
 

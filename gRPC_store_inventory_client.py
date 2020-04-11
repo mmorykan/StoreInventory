@@ -15,6 +15,14 @@ class grpcStoreInventoryClient:
         channel = grpc.insecure_channel(address + ':' + str(port))
         self.client = gRPC_store_inventory_pb2_grpc.ProductInventoryStub(channel)
 
+    
+    def successful_connection(self):
+        try:
+            self.client.determineSuccessfulConnection(gRPC_store_inventory_pb2.Empty())
+            return True
+        except Exception:
+            return False
+
 
     def get_list_of_products(self, products):
         """

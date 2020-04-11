@@ -18,7 +18,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='ecommerce',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=b'\n\x1agRPC_store_inventory.proto\x12\tecommerce\"\x99\x01\n\x07Product\x12\x11\n\tid_number\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x03 \x01(\t\x12\x14\n\x0cmanufacturer\x18\x04 \x01(\t\x12\x16\n\x0ewholesale_cost\x18\x05 \x01(\x01\x12\x11\n\tsale_cost\x18\x06 \x01(\x01\x12\x17\n\x0f\x61mount_in_stock\x18\x07 \x01(\x05\"Q\n\x10ProductAndDemand\x12%\n\x07product\x18\x01 \x01(\x0b\x32\x14.ecommerce.ProductID\x12\x16\n\x0enum_of_product\x18\x02 \x01(\x05\"\x91\x01\n\x05Order\x12\x11\n\tid_number\x18\x01 \x01(\t\x12\x13\n\x0b\x64\x65stination\x18\x02 \x01(\t\x12\x0c\n\x04\x64\x61te\x18\x03 \x01(\t\x12-\n\x08products\x18\x04 \x03(\x0b\x32\x1b.ecommerce.ProductAndDemand\x12\x0f\n\x07is_paid\x18\x05 \x01(\t\x12\x12\n\nis_shipped\x18\x06 \x01(\t\"B\n\tProductID\x12\x11\n\tid_number\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x14\n\x0cmanufacturer\x18\x03 \x01(\t\"\x1c\n\x07OrderID\x12\x11\n\tid_number\x18\x01 \x01(\t\"\xa3\x01\n\x11UpdateProductInfo\x12\x11\n\tid_number\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x03 \x01(\t\x12\x14\n\x0cmanufacturer\x18\x04 \x01(\t\x12\x16\n\x0ewholesale_cost\x18\x05 \x01(\x01\x12\x11\n\tsale_cost\x18\x06 \x01(\x01\x12\x17\n\x0f\x61mount_in_stock\x18\x07 \x01(\x05\"l\n\x0fUpdateOrderInfo\x12\x11\n\tid_number\x18\x01 \x01(\t\x12\x13\n\x0b\x64\x65stination\x18\x02 \x01(\t\x12\x0c\n\x04\x64\x61te\x18\x03 \x01(\t\x12\x0f\n\x07is_paid\x18\x05 \x01(\t\x12\x12\n\nis_shipped\x18\x06 \x01(\t\"N\n\nAddToOrder\x12\x11\n\tid_number\x18\x01 \x01(\t\x12-\n\x08products\x18\x02 \x03(\x0b\x32\x1b.ecommerce.ProductAndDemand\"S\n\x0fRemoveFromOrder\x12\x11\n\tid_number\x18\x01 \x01(\t\x12-\n\x08products\x18\x02 \x03(\x0b\x32\x1b.ecommerce.ProductAndDemand\"2\n\x0bOrderStatus\x12\x12\n\nis_shipped\x18\x01 \x01(\t\x12\x0f\n\x07is_paid\x18\x02 \x01(\t\":\n\x10ListProductsInfo\x12\x14\n\x0cmanufacturer\x18\x01 \x01(\t\x12\x10\n\x08in_stock\x18\x02 \x01(\t\"\x07\n\x05\x45mpty2\xeb\x04\n\x10ProductInventory\x12\x36\n\naddProduct\x12\x12.ecommerce.Product\x1a\x14.ecommerce.ProductID\x12\x30\n\x08\x61\x64\x64Order\x12\x10.ecommerce.Order\x1a\x12.ecommerce.OrderID\x12\x36\n\ngetProduct\x12\x14.ecommerce.ProductID\x1a\x12.ecommerce.Product\x12\x30\n\x08getOrder\x12\x12.ecommerce.OrderID\x1a\x10.ecommerce.Order\x12\x41\n\rupdateProduct\x12\x1c.ecommerce.UpdateProductInfo\x1a\x12.ecommerce.Product\x12;\n\x0bupdateOrder\x12\x1a.ecommerce.UpdateOrderInfo\x1a\x10.ecommerce.Order\x12=\n\x12\x61\x64\x64ProductsToOrder\x12\x15.ecommerce.AddToOrder\x1a\x10.ecommerce.Order\x12G\n\x17removeProductsFromOrder\x12\x1a.ecommerce.RemoveFromOrder\x1a\x10.ecommerce.Order\x12\x41\n\x0clistProducts\x12\x1b.ecommerce.ListProductsInfo\x1a\x12.ecommerce.Product0\x01\x12\x38\n\nlistOrders\x12\x16.ecommerce.OrderStatus\x1a\x10.ecommerce.Order0\x01\x62\x06proto3'
+  serialized_pb=b'\n\x1agRPC_store_inventory.proto\x12\tecommerce\"\x99\x01\n\x07Product\x12\x11\n\tid_number\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x03 \x01(\t\x12\x14\n\x0cmanufacturer\x18\x04 \x01(\t\x12\x16\n\x0ewholesale_cost\x18\x05 \x01(\x01\x12\x11\n\tsale_cost\x18\x06 \x01(\x01\x12\x17\n\x0f\x61mount_in_stock\x18\x07 \x01(\x05\"Q\n\x10ProductAndDemand\x12%\n\x07product\x18\x01 \x01(\x0b\x32\x14.ecommerce.ProductID\x12\x16\n\x0enum_of_product\x18\x02 \x01(\x05\"\x91\x01\n\x05Order\x12\x11\n\tid_number\x18\x01 \x01(\t\x12\x13\n\x0b\x64\x65stination\x18\x02 \x01(\t\x12\x0c\n\x04\x64\x61te\x18\x03 \x01(\t\x12-\n\x08products\x18\x04 \x03(\x0b\x32\x1b.ecommerce.ProductAndDemand\x12\x0f\n\x07is_paid\x18\x05 \x01(\t\x12\x12\n\nis_shipped\x18\x06 \x01(\t\"B\n\tProductID\x12\x11\n\tid_number\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x14\n\x0cmanufacturer\x18\x03 \x01(\t\"\x1c\n\x07OrderID\x12\x11\n\tid_number\x18\x01 \x01(\t\"\xa3\x01\n\x11UpdateProductInfo\x12\x11\n\tid_number\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x03 \x01(\t\x12\x14\n\x0cmanufacturer\x18\x04 \x01(\t\x12\x16\n\x0ewholesale_cost\x18\x05 \x01(\x01\x12\x11\n\tsale_cost\x18\x06 \x01(\x01\x12\x17\n\x0f\x61mount_in_stock\x18\x07 \x01(\x05\"l\n\x0fUpdateOrderInfo\x12\x11\n\tid_number\x18\x01 \x01(\t\x12\x13\n\x0b\x64\x65stination\x18\x02 \x01(\t\x12\x0c\n\x04\x64\x61te\x18\x03 \x01(\t\x12\x0f\n\x07is_paid\x18\x05 \x01(\t\x12\x12\n\nis_shipped\x18\x06 \x01(\t\"N\n\nAddToOrder\x12\x11\n\tid_number\x18\x01 \x01(\t\x12-\n\x08products\x18\x02 \x03(\x0b\x32\x1b.ecommerce.ProductAndDemand\"S\n\x0fRemoveFromOrder\x12\x11\n\tid_number\x18\x01 \x01(\t\x12-\n\x08products\x18\x02 \x03(\x0b\x32\x1b.ecommerce.ProductAndDemand\"2\n\x0bOrderStatus\x12\x12\n\nis_shipped\x18\x01 \x01(\t\x12\x0f\n\x07is_paid\x18\x02 \x01(\t\":\n\x10ListProductsInfo\x12\x14\n\x0cmanufacturer\x18\x01 \x01(\t\x12\x10\n\x08in_stock\x18\x02 \x01(\t\"\x07\n\x05\x45mpty2\xb0\x05\n\x10ProductInventory\x12\x43\n\x1d\x64\x65termineSuccessfulConnection\x12\x10.ecommerce.Empty\x1a\x10.ecommerce.Empty\x12\x36\n\naddProduct\x12\x12.ecommerce.Product\x1a\x14.ecommerce.ProductID\x12\x30\n\x08\x61\x64\x64Order\x12\x10.ecommerce.Order\x1a\x12.ecommerce.OrderID\x12\x36\n\ngetProduct\x12\x14.ecommerce.ProductID\x1a\x12.ecommerce.Product\x12\x30\n\x08getOrder\x12\x12.ecommerce.OrderID\x1a\x10.ecommerce.Order\x12\x41\n\rupdateProduct\x12\x1c.ecommerce.UpdateProductInfo\x1a\x12.ecommerce.Product\x12;\n\x0bupdateOrder\x12\x1a.ecommerce.UpdateOrderInfo\x1a\x10.ecommerce.Order\x12=\n\x12\x61\x64\x64ProductsToOrder\x12\x15.ecommerce.AddToOrder\x1a\x10.ecommerce.Order\x12G\n\x17removeProductsFromOrder\x12\x1a.ecommerce.RemoveFromOrder\x1a\x10.ecommerce.Order\x12\x41\n\x0clistProducts\x12\x1b.ecommerce.ListProductsInfo\x1a\x12.ecommerce.Product0\x01\x12\x38\n\nlistOrders\x12\x16.ecommerce.OrderStatus\x1a\x10.ecommerce.Order0\x01\x62\x06proto3'
 )
 
 
@@ -695,12 +695,21 @@ _PRODUCTINVENTORY = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   serialized_start=1089,
-  serialized_end=1708,
+  serialized_end=1777,
   methods=[
+  _descriptor.MethodDescriptor(
+    name='determineSuccessfulConnection',
+    full_name='ecommerce.ProductInventory.determineSuccessfulConnection',
+    index=0,
+    containing_service=None,
+    input_type=_EMPTY,
+    output_type=_EMPTY,
+    serialized_options=None,
+  ),
   _descriptor.MethodDescriptor(
     name='addProduct',
     full_name='ecommerce.ProductInventory.addProduct',
-    index=0,
+    index=1,
     containing_service=None,
     input_type=_PRODUCT,
     output_type=_PRODUCTID,
@@ -709,7 +718,7 @@ _PRODUCTINVENTORY = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='addOrder',
     full_name='ecommerce.ProductInventory.addOrder',
-    index=1,
+    index=2,
     containing_service=None,
     input_type=_ORDER,
     output_type=_ORDERID,
@@ -718,7 +727,7 @@ _PRODUCTINVENTORY = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='getProduct',
     full_name='ecommerce.ProductInventory.getProduct',
-    index=2,
+    index=3,
     containing_service=None,
     input_type=_PRODUCTID,
     output_type=_PRODUCT,
@@ -727,7 +736,7 @@ _PRODUCTINVENTORY = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='getOrder',
     full_name='ecommerce.ProductInventory.getOrder',
-    index=3,
+    index=4,
     containing_service=None,
     input_type=_ORDERID,
     output_type=_ORDER,
@@ -736,7 +745,7 @@ _PRODUCTINVENTORY = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='updateProduct',
     full_name='ecommerce.ProductInventory.updateProduct',
-    index=4,
+    index=5,
     containing_service=None,
     input_type=_UPDATEPRODUCTINFO,
     output_type=_PRODUCT,
@@ -745,7 +754,7 @@ _PRODUCTINVENTORY = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='updateOrder',
     full_name='ecommerce.ProductInventory.updateOrder',
-    index=5,
+    index=6,
     containing_service=None,
     input_type=_UPDATEORDERINFO,
     output_type=_ORDER,
@@ -754,7 +763,7 @@ _PRODUCTINVENTORY = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='addProductsToOrder',
     full_name='ecommerce.ProductInventory.addProductsToOrder',
-    index=6,
+    index=7,
     containing_service=None,
     input_type=_ADDTOORDER,
     output_type=_ORDER,
@@ -763,7 +772,7 @@ _PRODUCTINVENTORY = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='removeProductsFromOrder',
     full_name='ecommerce.ProductInventory.removeProductsFromOrder',
-    index=7,
+    index=8,
     containing_service=None,
     input_type=_REMOVEFROMORDER,
     output_type=_ORDER,
@@ -772,7 +781,7 @@ _PRODUCTINVENTORY = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='listProducts',
     full_name='ecommerce.ProductInventory.listProducts',
-    index=8,
+    index=9,
     containing_service=None,
     input_type=_LISTPRODUCTSINFO,
     output_type=_PRODUCT,
@@ -781,7 +790,7 @@ _PRODUCTINVENTORY = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='listOrders',
     full_name='ecommerce.ProductInventory.listOrders',
-    index=9,
+    index=10,
     containing_service=None,
     input_type=_ORDERSTATUS,
     output_type=_ORDER,

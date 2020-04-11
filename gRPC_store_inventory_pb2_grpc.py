@@ -14,6 +14,11 @@ class ProductInventoryStub(object):
     Args:
       channel: A grpc.Channel.
     """
+    self.determineSuccessfulConnection = channel.unary_unary(
+        '/ecommerce.ProductInventory/determineSuccessfulConnection',
+        request_serializer=gRPC__store__inventory__pb2.Empty.SerializeToString,
+        response_deserializer=gRPC__store__inventory__pb2.Empty.FromString,
+        )
     self.addProduct = channel.unary_unary(
         '/ecommerce.ProductInventory/addProduct',
         request_serializer=gRPC__store__inventory__pb2.Product.SerializeToString,
@@ -69,6 +74,13 @@ class ProductInventoryStub(object):
 class ProductInventoryServicer(object):
   # missing associated documentation comment in .proto file
   pass
+
+  def determineSuccessfulConnection(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
 
   def addProduct(self, request, context):
     # missing associated documentation comment in .proto file
@@ -143,6 +155,11 @@ class ProductInventoryServicer(object):
 
 def add_ProductInventoryServicer_to_server(servicer, server):
   rpc_method_handlers = {
+      'determineSuccessfulConnection': grpc.unary_unary_rpc_method_handler(
+          servicer.determineSuccessfulConnection,
+          request_deserializer=gRPC__store__inventory__pb2.Empty.FromString,
+          response_serializer=gRPC__store__inventory__pb2.Empty.SerializeToString,
+      ),
       'addProduct': grpc.unary_unary_rpc_method_handler(
           servicer.addProduct,
           request_deserializer=gRPC__store__inventory__pb2.Product.FromString,

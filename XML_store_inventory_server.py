@@ -15,6 +15,10 @@ class XMLProductInventory():
         self.shared_database = store_inventory
 
 
+    def determine_successful_connection(self):
+        return True
+
+
     def get_list_of_products(self, products):
         """
         Converts a list of products and their quantities from the command line to a list of dictionaries
@@ -48,12 +52,12 @@ class XMLProductInventory():
         return self.shared_database.getProductByIDorName({'id_number': id_number, 'name': name})
          
 
-    def updateProduct(self, id_number=None, name=None, description=None, manufacturer=None, wholesale_cost=None, sale_cost=None, amount_in_stock=None):
+    def updateProduct(self, id_number, name, descriptionn, manufacturer, wholesale_cost, sale_cost, amount_in_stock):
         """
         Update the specified fields for the given project. Can update every field except product id and name
         Returns a product
         """
-        product = self.shared_database.update_product(id_number=id_number, name=name, description=description, manufacturer=manufacturer, wholesale_cost=wholesale_cost, sale_cost=sale_cost, amount_in_stock=amount_in_stock)
+        product = self.shared_database.update_product(id_number=id_number, name=name, description=descriptionn, manufacturer=manufacturer, wholesale_cost=wholesale_cost, sale_cost=sale_cost, amount_in_stock=amount_in_stock)
         return product
         
 

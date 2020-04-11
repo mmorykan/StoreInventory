@@ -2,6 +2,7 @@ syntax = "proto3";
 package ecommerce;
 
 service ProductInventory { 
+    rpc determineSuccessfulConnection(Empty) returns (Empty);
     rpc addProduct(Product) returns (ProductID); 
     rpc addOrder(Order) returns (OrderID);
     rpc getProduct(ProductID) returns (Product);

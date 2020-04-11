@@ -1,5 +1,7 @@
 import XML_store_inventory_client
 import gRPC_store_inventory_client
+import xmlrpc.client
+import sys
 import argparse
 
 
@@ -8,9 +10,19 @@ def get_client(server, address, port):
     Returns the correct client based on the specified server on the given address and port
     """
     if server == 'xml':
-        return XML_store_inventory_client.xmlrpcStoreInventoryClient(address, port)
+        client = XML_store_inventory_client.xmlrpcStoreInventoryClient(address, port)
     else:
-        return gRPC_store_inventory_client.grpcStoreInventoryClient(address, port)
+        client = gRPC_store_inventory_client.grpcStoreInventoryClient(address, port)
+
+    print(client)
+    x = client.successful_connection()
+    print(x)
+    if not x:
+        print('Please enter a valid connection')
+        sys.exit()
+
+    return client
+
 
 
 def product_fields(subparser):
@@ -46,7 +58,7 @@ def optional_order_fields(subparser):
 def main():
     parser = argparse.ArgumentParser(description='Client to interact with either the gRPC or XML-RPC store inventory server')
     parser.add_argument('address', help='The IP address of the server to connect to')
-    parser.add_argument('--port', type=int, help='The port of the server to connect to', default=5180)
+    parser.add_argument('--port', type=int, help='The port of the server to connect to', default=50052)
     parser.add_argument('grpc_or_xml', choices=['grpc', 'xml'], help='Which server to interact with')
 
     subparsers = parser.add_subparsers(title='command', dest='cmd', required=True)
@@ -102,6 +114,8 @@ def main():
     args = parser.parse_args()
 
     client = get_client(args.grpc_or_xml, args.address, args.port)
+    print('does it exit here??')
+    # List methods function?
 
     if args.cmd == 'add-product':
         client.addProduct(args.name, args.description, args.manufacturer, args.wholesale_cost, args.sale_cost, args.amount_in_stock)

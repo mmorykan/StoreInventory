@@ -15,6 +15,11 @@ class ProductInventory(gRPC_store_inventory_pb2_grpc.ProductInventoryServicer):
         """
         self.shared_database = shared_database
 
+    
+    def determineSuccessfulConnection(self, request, context):
+        print('made it to function')
+        return gRPC_store_inventory_pb2.Empty()
+
 
     def update_product_fields(self, product):
         """
