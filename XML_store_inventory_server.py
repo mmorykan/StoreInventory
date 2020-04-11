@@ -16,6 +16,9 @@ class XMLProductInventory():
 
 
     def get_list_of_products(self, products):
+        """
+        Converts a list of products and their quantities from the command line to a list of dictionaries
+        """
         list_of_products = []
         for product_id in range(0, len(products) - 1, 2):
             print(product_id)

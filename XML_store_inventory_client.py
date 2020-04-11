@@ -6,8 +6,11 @@ class xmlrpcStoreInventoryClient:
     XML-RPC client to demonstrate all functions withing the XML-RPC server 
     """
 
-    def __init__(self):
-        self.client = ServerProxy('http://localhost:8000', allow_none=True)
+    def __init__(self, address, port):
+        """
+        Creates the xml-rpc client, connecting it to the server through the given IP and port
+        """
+        self.client = ServerProxy(f'http://{address}:{port}', allow_none=True)
 
     
     def addProduct(self, name, description, manufacturer, wholesale_cost, sale_cost, amount_in_stock):

@@ -3,7 +3,6 @@ import grpc
 import uuid
 import gRPC_store_inventory_server
 import XML_store_inventory_server
-# import gRPC_store_inventory_pb2
 import gRPC_store_inventory_pb2_grpc
 from xmlrpc.server import DocXMLRPCServer
 import pickle
@@ -78,7 +77,6 @@ class Inventory:
         """
         Updates any given field for a product except the products id number and name
         """
-        # product = self.getProductByIDorName(product_info['id_number'], product_info['name'])
         if product_info['id_number']:
             product = self.getProductByID(product_info['id_number'])
         else:
@@ -96,7 +94,6 @@ class Inventory:
             product['amount_in_stock'] = product_info['amount_in_stock']
 
         self.product_id_database[product['id_number']] = product
-        self.product_id_database[product['name']] = product
         return product
 
 
@@ -204,7 +201,6 @@ class Inventory:
             current_product = self.getProductByIDorName(product_and_demand)
             if current_product['amount_in_stock'] >= product_and_demand['number_of_product']:
                 self.product_id_database[current_product['id_number']]['amount_in_stock'] -= product_and_demand['number_of_product']
-                # self.product_name_database[current_product['name']]['amount_in_stock'] -= product_and_demand['number_of_product']
                 for product in order['products']:
                     if product['id_number'] == current_product['id_number']:
                         product_found = True
@@ -233,7 +229,6 @@ class Inventory:
                         products_to_remove.append(old_prod_dem)
 
                     self.product_id_database[old_prod_dem['id_number']]['amount_in_stock'] += new_product_and_demand['number_of_product']
-                    # self.product_name_database[old_prod_dem['name']]['amount_in_stock'] += new_product_and_demand['number_of_product']
 
         for product_and_demand in products_to_remove:
             order['products'].remove(product_and_demand)
@@ -248,25 +243,11 @@ class Inventory:
         Returns a list of orders
         """
         list_of_orders = []
-        # if is_shipped is None and is_paid is None:
-        #     list_of_orders = self.order_database.values()
 
-        # elif is_shipped is not None and is_paid is None:
-        #     for order in self.order_database.values():
-        #         if order['is_shipped'] == is_shipped:
-        #             list_of_orders.append(order)
-
-        # elif is_paid is not None and is_shipped is None:
-        #     for order in self.order_database.values():
-        #         if order['is_paid'] == is_paid:
-        #             list_of_orders.append(order)
-
-        # else:
         for order in self.order_database.values():
-            print(order)
             if order['is_shipped'] == is_shipped and order['is_paid'] == is_paid:
                 list_of_orders.append(order)
-        print(list_of_orders)
+
         return list_of_orders
 
 
