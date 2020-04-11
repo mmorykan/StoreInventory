@@ -1,5 +1,3 @@
-# import store_inventory_shared_data
-
 
 class XMLProductInventory():
     """

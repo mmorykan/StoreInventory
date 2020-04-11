@@ -1,6 +1,5 @@
 import XML_store_inventory_client
 import gRPC_store_inventory_client
-import xmlrpc.client
 import sys
 import argparse
 
@@ -14,15 +13,11 @@ def get_client(server, address, port):
     else:
         client = gRPC_store_inventory_client.grpcStoreInventoryClient(address, port)
 
-    print(client)
-    x = client.successful_connection()
-    print(x)
-    if not x:
+    if not client.successful_connection():
         print('Please enter a valid connection')
-        sys.exit()
+        sys.exit()    # Exit the program
 
     return client
-
 
 
 def product_fields(subparser):
@@ -56,6 +51,11 @@ def optional_order_fields(subparser):
 
 
 def main():
+    """
+    All argparse for the client to interact with
+    """
+
+    # Set up address and port and determine gRPC or XML-RPC server connection
     parser = argparse.ArgumentParser(description='Client to interact with either the gRPC or XML-RPC store inventory server')
     parser.add_argument('address', help='The IP address of the server to connect to')
     parser.add_argument('--port', type=int, help='The port of the server to connect to', default=50052)
@@ -63,60 +63,74 @@ def main():
 
     subparsers = parser.add_subparsers(title='command', dest='cmd', required=True)
 
+    ##### Product argparsing #####
+
+    # Add a product
     add_product = subparsers.add_parser(name='add-product', help='Add a product to the inventory database')
     add_product.add_argument('name', help='The name of a product')
     product_fields(add_product)
 
+    # Get a product by its id
     get_product_by_id = subparsers.add_parser(name='get-product-by-id', help='Get a product specified by id from the inventory database')
     get_product_by_id.add_argument('id_number', help='The id of a product')
 
+    # Get a product by its name
     get_product_by_name = subparsers.add_parser(name='get-product-by-name', help='Get a product specified by its name from the inventory database')
     get_product_by_name.add_argument('name', help='the name of a product')
 
+    # Update a product by its id
     update_product_by_id = subparsers.add_parser(name='update-product-by-id', help='Update a product specified by its id')
     update_product_by_id.add_argument('id_number', help='The id number of product')
     optional_product_fields(update_product_by_id)
 
+    # Update a product by its name
     update_product_by_name = subparsers.add_parser(name='update-product-by-name', help='Update a product specified by its name')
     update_product_by_name.add_argument('name', help='The name of the product')
     optional_product_fields(update_product_by_name)
             
+    # List all products. Products can be queried by manufacturer and/or stock status
     list_products = subparsers.add_parser(name='list-products', help='List products based on manufacturer and/or products are in stock')
     list_products.add_argument('--manufacturer', help='The product manufacturer to search for')
-    list_products.add_argument('--in-stock', help='Whether or not the product is in stock', default='T')
+    list_products.add_argument('--in_stock', help='Whether or not the product is in stock', default='T')
 
 
+    ##### Order Argparsing #####
 
-
+    # Add an order 
     add_order = subparsers.add_parser(name='add-order', help='Add an order to the inventory database')
     order_fields(add_order)
     add_order.add_argument('products', nargs='+', help='The list of product ids followed by their counts to be added to the order')
 
+    # Get an order 
     get_order = subparsers.add_parser(name='get-order', help='Get an order from the inventory database')
     get_order.add_argument('id_number', help='The id of the desired order')
 
+    # Update an order 
     update_order = subparsers.add_parser(name='update-order', help='Update the given order')
     update_order.add_argument('id_number', help='The id of the order to update')
     optional_order_fields(update_order)
 
+    # Add quantities of products to an order  
     add_products_to_order = subparsers.add_parser(name='add-to-order', help='Add products to an order')
     add_products_to_order.add_argument('id_number', help='The id of the order to update')
     add_products_to_order.add_argument('products', nargs='+', help='A list of products followed by their counts to be added to the order')
 
+    # Remove quantities of products from an order
     remove_products_from_order = subparsers.add_parser(name='remove-from-order', help='Remove products from an order')
     remove_products_from_order.add_argument('id_number', help='The id of the order to update')
     remove_products_from_order.add_argument('products', nargs='+', help='A list of products followed by their counts to be removed from an order')
 
+    # List all orders. Orders can be queries by shipped status and paid status
     list_orders = subparsers.add_parser(name='list-orders', help='List all orders based on shipped status and paid status')
     list_orders.add_argument('--is_shipped', help='Whether or not the order has been shipped', default='T')
     list_orders.add_argument('--is_paid', help='Whether or not the order has been paid', default='T')
 
     args = parser.parse_args()
 
+    # Retrieve the correct client based on gRPC or XML-RPC connection
     client = get_client(args.grpc_or_xml, args.address, args.port)
-    print('does it exit here??')
-    # List methods function?
 
+    # Call the specified method
     if args.cmd == 'add-product':
         client.addProduct(args.name, args.description, args.manufacturer, args.wholesale_cost, args.sale_cost, args.amount_in_stock)
     elif args.cmd == 'get-product-by-id':

@@ -1,5 +1,4 @@
 from xmlrpc.client import ServerProxy
-import xmlrpc.client
 
 
 class xmlrpcStoreInventoryClient:
@@ -15,6 +14,9 @@ class xmlrpcStoreInventoryClient:
 
 
     def successful_connection(self):
+        """
+        Determines if a successful connection to the server can be made
+        """
         try:
             return self.client.determine_successful_connection()
         except Exception:
@@ -78,4 +80,8 @@ class xmlrpcStoreInventoryClient:
     def listOrders(self, is_shipped, is_paid):
         list_of_orders = self.client.listOrders(is_shipped, is_paid)
         print(list_of_orders)
+
+
+    def list_methods(self):
+        print(self.client.system.listMethods())
 

@@ -17,6 +17,9 @@ class grpcStoreInventoryClient:
 
     
     def successful_connection(self):
+        """
+        Determines if a successful connection to the server can be made
+        """
         try:
             self.client.determineSuccessfulConnection(gRPC_store_inventory_pb2.Empty())
             return True
@@ -26,7 +29,7 @@ class grpcStoreInventoryClient:
 
     def get_list_of_products(self, products):
         """
-        Returns a list of products and their quantities as a gRPC object
+        Returns a list of products and their quantities as a list of ProductAndDemand gRPC objects
         """
         product_list = []
         for product in range(0, len(products) - 1, 2):
