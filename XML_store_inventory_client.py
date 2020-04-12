@@ -19,7 +19,7 @@ class xmlrpcStoreInventoryClient:
         """
         try:
             return self.client.determine_successful_connection()
-        except Exception:
+        except:
             return False
 
     
