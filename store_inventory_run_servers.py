@@ -6,7 +6,6 @@ import XML_store_inventory_server
 import gRPC_store_inventory_pb2_grpc
 from xmlrpc.server import DocXMLRPCServer
 import pickle
-import os
 
 
 class Inventory:
