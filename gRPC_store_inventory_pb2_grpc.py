@@ -71,7 +71,7 @@ class ProductInventoryStub(object):
         )
     self.clearDatabase = channel.unary_unary(
         '/ecommerce.ProductInventory/clearDatabase',
-        request_serializer=gRPC__store__inventory__pb2.Empty.SerializeToString,
+        request_serializer=gRPC__store__inventory__pb2.Clear.SerializeToString,
         response_deserializer=gRPC__store__inventory__pb2.Empty.FromString,
         )
 
@@ -204,7 +204,7 @@ class ProductInventoryServicer(object):
   def clearDatabase(self, request, context):
     """
     Wipes the database file
-    Parameter: Empty
+    Parameter: Clear
     Returns: Empty
     """
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -271,7 +271,7 @@ def add_ProductInventoryServicer_to_server(servicer, server):
       ),
       'clearDatabase': grpc.unary_unary_rpc_method_handler(
           servicer.clearDatabase,
-          request_deserializer=gRPC__store__inventory__pb2.Empty.FromString,
+          request_deserializer=gRPC__store__inventory__pb2.Clear.FromString,
           response_serializer=gRPC__store__inventory__pb2.Empty.SerializeToString,
       ),
   }

@@ -2,7 +2,6 @@ from xmlrpc.client import ServerProxy
 import random
 import uuid
 import time
-# import subprocess
 
 
 client = ServerProxy('http://18.218.18.59:8000')
@@ -65,17 +64,24 @@ def call_all_functions():
     list_orders()
 
 
+def clear_database():
+    try:
+        client.clearDatabase('T')
+    except:
+        return
+
+
 def main():
+    clear_database()
     populate()
     
-
     start_time = time.monotonic()
     call_all_functions()
     end_time = time.monotonic()
 
     print(end_time - start_time)
 
-    # subprocess.Popen(["scp", "store_inventory_database.bin", "ec2-user@aws-project2:~"])
+    clear_database()
 
 
 if __name__ == '__main__':

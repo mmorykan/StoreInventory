@@ -94,10 +94,10 @@ service ProductInventory {
 
     /*
     Wipes the database file
-    Parameter: Empty
+    Parameter: Clear
     Returns: Empty
     */
-    rpc clearDatabase(Empty) returns (Empty);
+    rpc clearDatabase(Clear) returns (Empty);
 }
 
 
@@ -187,6 +187,11 @@ message ListProductsInfo {
     // Both fields are optional. The in_stock field defaults to 'T', retrieving all products that are in stock 
     string manufacturer = 1;  // The manufacturer of the products to list (str)
     string in_stock = 2;      // Whether or not the products are in stock (str) Input Values: 'T' or 'F'
+}
+
+message Clear {
+    // Optional field. Determine whether or not to wipe the database
+    string clear = 1;
 }
 
 message Empty {

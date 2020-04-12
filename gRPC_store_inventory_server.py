@@ -168,5 +168,8 @@ class ProductInventory(gRPC_store_inventory_pb2_grpc.ProductInventoryServicer):
 
 
     def clearDatabase(self, request, context):
+        """
+        Clears the database
+        """
         self.shared_database.clear_database()
         return gRPC_store_inventory_pb2.Empty()

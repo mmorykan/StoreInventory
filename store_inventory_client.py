@@ -130,7 +130,7 @@ def main():
     list_orders.add_argument('--is_paid', choices=['T', 'F'], help='Whether or not the order has been paid')
 
     clear_database = subparsers.add_parser(name='clear-database', help='Wipe the database file')
-
+    clear_database.add_argument('--clear', choices=['T', 'F'], help='Determine whether or not the wipe the database', default='F')
     args = parser.parse_args()
 
     # Retrieve the correct client based on gRPC or XML-RPC connection
@@ -163,7 +163,7 @@ def main():
     elif args.cmd == 'list-orders':
         client.listOrders(args.is_shipped, args.is_paid)
     else:
-        client.clearDatabase()
+        client.clearDatabase(args.clear)
 
 
 if __name__ == '__main__':

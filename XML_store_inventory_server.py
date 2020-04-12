@@ -147,6 +147,10 @@ class XMLProductInventory():
         return self.shared_database.list_orders(is_shipped, is_paid)
 
 
-    def clearDatabase(self):
-        self.shared_database.clear_database()
+    def clearDatabase(self, clear):
+        """
+        Clears the database
+        """
+        if clear == 'T':    
+            self.shared_database.clear_database()
         
