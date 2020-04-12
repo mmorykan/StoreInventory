@@ -72,6 +72,7 @@ class xmlrpcStoreInventoryClient:
         order = self.client.addProductsToOrder(id_number, products)
         print(order)
 
+
     def removeProductsFromOrder(self, id_number, products):
         order = self.client.removeProductsFromOrder(id_number, products)
         print(order)
@@ -80,8 +81,4 @@ class xmlrpcStoreInventoryClient:
     def listOrders(self, is_shipped, is_paid):
         list_of_orders = self.client.listOrders(is_shipped, is_paid)
         print(list_of_orders)
-
-
-    def list_methods(self):
-        print(self.client.system.listMethods())
 

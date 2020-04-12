@@ -6,7 +6,7 @@ import gRPC_store_inventory_pb2_grpc
 class ProductInventory(gRPC_store_inventory_pb2_grpc.ProductInventoryServicer):
     """
     Class for gRPC server and methods
-    Server is run from store_inventory_shared_data.py 
+    Server is run from store_inventory_run_servers.py 
     """
 
     def __init__(self, shared_database):
@@ -34,18 +34,20 @@ class ProductInventory(gRPC_store_inventory_pb2_grpc.ProductInventoryServicer):
         """
         Adds a product to the product id and name databases as well as obtains a unique id for the new product
         Returns a product id
+        May return a null product if if the requested name for the product is already in use
         """
         valid_id = self.shared_database.add_product(name=request.name, description=request.description, manufacturer=request.manufacturer, wholesale_cost=request.wholesale_cost, sale_cost=request.sale_cost, amount_in_stock=request.amount_in_stock)
-        if valid_id:
+        if valid_id != 'null product':
             return gRPC_store_inventory_pb2.ProductID(id_number=valid_id, name=request.name)
         else:
-            return gRPC_store_inventory_pb2.ProductID()
+            return gRPC_store_inventory_pb2.ProductID(id_number=valid_id, name='Product already exists')
 
 
     def getProduct(self, request, context):
         """
         Returns the current product based on product id or name
         Returns a product
+        Return value may be the null product if requested product id or name is invalid
         """
         product = self.shared_database.getProductByIDorName({'id_number': request.id_number, 'name': request.name})
         return self.update_product_fields(product)
@@ -55,6 +57,7 @@ class ProductInventory(gRPC_store_inventory_pb2_grpc.ProductInventoryServicer):
         """
         Update the specified fields for the given project. Can update every field except product id and name
         Returns a product
+        Return value may be null product if the requested product id or name is invalid
         """
         product = self.shared_database.update_product(id_number=request.id_number, name=request.name, description=request.description, manufacturer=request.manufacturer, wholesale_cost=request.wholesale_cost, sale_cost=request.sale_cost, amount_in_stock=request.amount_in_stock)
         return self.update_product_fields(product)    
@@ -115,6 +118,7 @@ class ProductInventory(gRPC_store_inventory_pb2_grpc.ProductInventoryServicer):
         """
         Receive an order based on the specified id value
         Returns an order
+        Return value may be null order if the requested order id is invalid
         """
         order = self.shared_database.get_order(request.id_number)
         return self.update_order_fields(order)
@@ -125,6 +129,7 @@ class ProductInventory(gRPC_store_inventory_pb2_grpc.ProductInventoryServicer):
         Updates the specified fields for an order.
         Can update destination, date, shipped status, and paid status
         Returns an order
+        Return value may be null order if the requested order id is invalid
         """
         order = self.shared_database.update_order(id_number=request.id_number, destination=request.destination, date=request.date, is_shipped=request.is_shipped, is_paid=request.is_paid)
         return self.update_order_fields(order)
@@ -134,6 +139,7 @@ class ProductInventory(gRPC_store_inventory_pb2_grpc.ProductInventoryServicer):
         """
         Add products to an existing order or increase the amounts of existing products already in the order
         Returns an order
+        Return value may be null order if the requested order id is invalid
         """
         list_of_products = self.get_list_of_products(request.products)
         order = self.shared_database.add_products_to_order(request.id_number, list_of_products)
@@ -144,6 +150,7 @@ class ProductInventory(gRPC_store_inventory_pb2_grpc.ProductInventoryServicer):
         """
         Removes products from an order specified by the order id or decrease the amounts of existing products within the order
         Returns an order
+        Return value may be null order if the requested order id is invalid
         """
         list_of_products = self.get_list_of_products(request.products)
         order = self.shared_database.remove_products_from_order(request.id_number, list_of_products)
@@ -152,7 +159,7 @@ class ProductInventory(gRPC_store_inventory_pb2_grpc.ProductInventoryServicer):
 
     def listOrders(self, request, context):
         """
-        Lists all the orders based on shipped status and paid status
+        Lists all the orders based on shipped status and paid status or all total orders
         Yields all appropriate orders
         """
         list_of_orders = self.shared_database.list_orders(request.is_shipped, request.is_paid)

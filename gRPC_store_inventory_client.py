@@ -23,7 +23,7 @@ class grpcStoreInventoryClient:
         try:
             self.client.determineSuccessfulConnection(gRPC_store_inventory_pb2.Empty())
             return True
-        except Exception:
+        except:
             return False
 
 

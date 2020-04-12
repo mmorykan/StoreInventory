@@ -4,7 +4,7 @@ package ecommerce;
 service ProductInventory { 
     // All functions specific to the gRPC server 
 
-    /* 
+    /*
     Determines a successful Connection between client and server
     Parameter: Empty
     Returns: Empty
@@ -12,9 +12,10 @@ service ProductInventory {
     rpc determineSuccessfulConnection(Empty) returns (Empty);
 
     /*
-    Add a product to the database
+    Add a product to the database. A product must not have the same name as another product
     Parameter: Product
     Returns: ProductID
+    Return value may be null product id, in which case the user specified Product name was invalid
     */
     rpc addProduct(Product) returns (ProductID); 
 
@@ -29,6 +30,7 @@ service ProductInventory {
     Get a product from the database by specifying either the product's id value or the product's name
     Parameter: ProductID
     Returns: Product
+    Return value may be the null product, in which case the user specified product id value or name was invalid
     */
     rpc getProduct(ProductID) returns (Product);
 
@@ -36,6 +38,7 @@ service ProductInventory {
     Get an order from the database by specifying the order's id value
     Parameter: OrderID
     Returns: Order
+    Return value may be null order, in which case the user specified id value was invalid
     */
     rpc getOrder(OrderID) returns (Order);
 
@@ -43,6 +46,7 @@ service ProductInventory {
     Update a product currently in the database, denoting it by either its id value or its name
     Parameter: UpdateProductInfo
     Returns: Product
+    Return value may be null product in which case the user specified id value or name was invalid
     */
     rpc updateProduct(UpdateProductInfo) returns (Product);
 
@@ -50,6 +54,7 @@ service ProductInventory {
     Update an order currently in the database, denoting it by its id value
     Parameter: UpdateOrderInfo
     Returns: Order
+    Return value may be null order, in which case the user specified id value was invalid
     */
     rpc updateOrder(UpdateOrderInfo) returns (Order);
 
@@ -58,6 +63,7 @@ service ProductInventory {
     This will update the products stock automatically 
     Parameter: AddToOrder
     Returns: Order
+    Return value may be null order, in which case the user specified id value was invalid
     */
     rpc addProductsToOrder(AddToOrder) returns (Order);
 
@@ -66,6 +72,7 @@ service ProductInventory {
     This will update the products stock automatically
     Parameter: RemoveFromOrder
     Returns: Order
+    Return value may be null order, in which case user specified id value was invalid
     */
     rpc removeProductsFromOrder(RemoveFromOrder) returns (Order);
 
@@ -86,9 +93,10 @@ service ProductInventory {
     rpc listOrders(OrderStatus) returns (stream Order);
 }
 
+
 message Product { 
     // All fields except the id_number field are required for a product to be added to the database
-    string id_number = 1;       // the id value of the product assigned by the server after being added (only used for server purposes)
+    string id_number = 1;       // the id value of the product assigned by the server after being added (only used for server purposes and assigned by the server)
     string name = 2;            // The name of the product (str)
     string description = 3;     // The description of the product (str)
     string manufacturer = 4;    // The manufacturer of the product (str)
@@ -97,21 +105,24 @@ message Product {
     int32 amount_in_stock = 7;  // The amount of the product in stock (int)
 }
 
+
 message ProductAndDemand {
     // A pair of product id or name and quantity of product
     ProductID product = 1;      // Either the id value or the name of a product (ProductID)
     int32 num_of_product = 2;   // The quantity of the product to be added or removed (int)
 }
 
+
 message Order {
     // All fields except the id_number field must be specified to add an order to the database
-    string id_number = 1;                      // The id value of the order (only used for server purposes)
+    string id_number = 1;                      // The id value of the order (only used for server purposes and assigned by the server)
     string destination = 2;                    // The destination of the order (str)
     string date = 3;                           // The date that the order will be delivered (str)
     repeated ProductAndDemand products = 4;    // A list of ProductAndDemand messages containing the id or name of the product you want to add and the quantity to add (ProductAndDemand)
-    string is_paid = 5;                        // Whether or not the order had been paid for (str) Input values: 'T', 'F'
-    string is_shipped = 6;                     // Whether or not the order has been shipped (str) Input values: 'T', 'F'
+    string is_paid = 5;                        // Whether or not the order had been paid for (str) Input values: 'T' or 'F'
+    string is_shipped = 6;                     // Whether or not the order has been shipped (str) Input values: 'T' or 'F'
 }
+
 
 message ProductID { 
     // A Product can be specified by either the id value or the name, therefore, only one must be provided
@@ -119,12 +130,14 @@ message ProductID {
     string name = 2;           // The name of the product (str)
 }
 
+
 message OrderID {
     string id_number = 1;   // The id value of the order assigned by the server (str)
 }
 
+
 message UpdateProductInfo {
-    // The only required field is the id_number of name field depending on which one the user prefers to use
+    // The only required field is the id_number or name field depending on which one the user prefers to use
     string id_number = 1;         // The id value of the product assigned by the server (str)
     string name = 2;              // The name of the product (str)
     string description = 3;       // The description of the product (str)
@@ -134,6 +147,7 @@ message UpdateProductInfo {
     int32 amount_in_stock = 7;    // The current amount of the product in stock (int)
 }   
 
+
 message UpdateOrderInfo {
     // The only required field is the id_number field so the server knows which order to update
     string id_number = 1;     // The id value of the order assigned by the server (str)
@@ -142,6 +156,7 @@ message UpdateOrderInfo {
     string is_paid = 5;       // Whether or not the order is paid for (str) Input values: 'T', 'F'
     string is_shipped = 6;    // Whether or not the order is shipped (str) Input values: 'T', 'F'
 }
+
 
 message AddToOrder {
     // Used for adding products to and order. Both fields are required
@@ -157,14 +172,14 @@ message RemoveFromOrder {
 
 message OrderStatus {
     // Both fields are optional. They default to 'T', retrieving all orders that have been shipped and paid
-    string is_shipped = 1;  // Whether or not the order has been shipped (str) Input Values: 'T', 'F'
-    string is_paid = 2;     // Whether or not the order has been paid for (str) Input Values: 'T', 'F'
+    string is_shipped = 1;  // Whether or not the order has been shipped (str) Input Values: 'T' or 'F'
+    string is_paid = 2;     // Whether or not the order has been paid for (str) Input Values: 'T' or 'F'
 }
 
 message ListProductsInfo {
     // Both fields are optional. The in_stock field defaults to 'T', retrieving all products that are in stock 
     string manufacturer = 1;  // The manufacturer of the products to list (str)
-    string in_stock = 2;      // Whether or not the products are in stock (str) Input Values: 'T', 'F'
+    string in_stock = 2;      // Whether or not the products are in stock (str) Input Values: 'T' or 'F'
 }
 
 message Empty {

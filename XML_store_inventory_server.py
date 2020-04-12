@@ -5,7 +5,6 @@ class XMLProductInventory():
     Server is run from store_inventory_shared_data.py 
     """
 
-
     def __init__(self, store_inventory):
         """
         Initializes the inventory object for the shared database
@@ -25,20 +24,26 @@ class XMLProductInventory():
         Converts a list of products and their quantities from the command line to a list of dictionaries
         """
         list_of_products = []
+
         for product_id in range(0, len(products) - 1, 2):
-            print(product_id)
             product_dict = {'id_number': products[product_id], 'number_of_product': int(products[product_id + 1])}
             list_of_products.append(product_dict)
 
         return list_of_products
 
 
-    def addProduct(self, name, description='', manufacturer='', wholesale_cost=-1, sale_cost=-1, stock=0):
+    def addProduct(self, name, description, manufacturer, wholesale_cost, sale_cost, stock):
         """
         Adds a product to the product id and name databases as well as obtains a unique id for the new product
-        Returns a product id            
+        Returns a product id          
+        Return value may be an error string if the product name already exists  
         """
-        valid_id = self.shared_database.add_product(name=name, description=description, manufacturer=manufacturer, wholesale_cost=wholesale_cost, sale_cost=sale_cost, amount_in_stock=stock)
+        valid_id = self.shared_database.add_product(name=name, 
+                                                    description=description, 
+                                                    manufacturer=manufacturer, 
+                                                    wholesale_cost=wholesale_cost, 
+                                                    sale_cost=sale_cost, 
+                                                    amount_in_stock=stock)
         if valid_id:
             return valid_id
         else:
@@ -49,6 +54,7 @@ class XMLProductInventory():
         """
         Returns the current product based on product id or name
         Returns a product
+        Return value may be a null product if the id value or name is invalid
         """
         return self.shared_database.getProductByIDorName({'id_number': id_number, 'name': name})
          
@@ -57,9 +63,15 @@ class XMLProductInventory():
         """
         Update the specified fields for the given project. Can update every field except product id and name
         Returns a product
+        Return value may be the null product if the id or name value is invalid
         """
-        product = self.shared_database.update_product(id_number=id_number, name=name, description=descriptionn, manufacturer=manufacturer, wholesale_cost=wholesale_cost, sale_cost=sale_cost, amount_in_stock=amount_in_stock)
-        return product
+        return self.shared_database.update_product(id_number=id_number, 
+                                                   name=name, 
+                                                   description=descriptionn, 
+                                                   manufacturer=manufacturer, 
+                                                   wholesale_cost=wholesale_cost, 
+                                                   sale_cost=sale_cost, 
+                                                   amount_in_stock=amount_in_stock)
         
 
     def listProducts(self, in_stock, manufacturer):
@@ -77,14 +89,18 @@ class XMLProductInventory():
         """
 
         list_of_products = self.get_list_of_products(product_list)
-        print(list_of_products)
-        return self.shared_database.add_order(destination=destination, date=date, products=list_of_products, is_paid=is_paid, is_shipped=is_shipped)
+        return self.shared_database.add_order(destination=destination, 
+                                              date=date, 
+                                              products=list_of_products, 
+                                              is_paid=is_paid, 
+                                              is_shipped=is_shipped)
 
 
     def getOrder(self, id_number):
         """
         Receive an order based on the specified id value
         Returns an order
+        Return value may be null order if the id value is invalid
         """
         return self.shared_database.get_order(id_number)
 
@@ -94,14 +110,20 @@ class XMLProductInventory():
         Updates the specified fields for an order.
         Can update destination, date, shipped status, and paid status
         Returns an order
+        Return value may be null order if the id value is invalid
         """
-        return self.shared_database.update_order(id_number=id_number, destination=destination, date=date, is_paid=is_paid, is_shipped=is_shipped)
+        return self.shared_database.update_order(id_number=id_number, 
+                                                 destination=destination, 
+                                                 date=date, 
+                                                 is_paid=is_paid, 
+                                                 is_shipped=is_shipped)
 
 
     def addProductsToOrder(self, id_number, product_list):
         """
         Add products to an existing order or increase the amounts of existing products already in the order
         Returns an order
+        Return value may be null order if the id value is invalid
         """
         list_of_products = self.get_list_of_products(product_list)
         return self.shared_database.add_products_to_order(id_number, list_of_products)
@@ -111,6 +133,7 @@ class XMLProductInventory():
         """
         Removes products from an order specified by the order id or decrease the amounts of existing products within the order
         Returns an order
+        Return value may be null order if the id value is invalid
         """
         list_of_products = self.get_list_of_products(product_list)
         return self.shared_database.remove_products_from_order(id_number, list_of_products)
@@ -118,7 +141,7 @@ class XMLProductInventory():
 
     def listOrders(self, is_shipped, is_paid):
         """
-        Lists all the orders based on shipped status and paid status
+        Lists all the orders based on shipped status and paid status or all total values
         Yields all appropriate orders
         """   
         return self.shared_database.list_orders(is_shipped, is_paid)
