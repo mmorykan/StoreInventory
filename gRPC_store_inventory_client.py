@@ -124,3 +124,6 @@ class grpcStoreInventoryClient:
         list_of_orders = list(self.client.listOrders(gRPC_store_inventory_pb2.OrderStatus(is_shipped=is_shipped, is_paid=is_paid)))
         print(list_of_orders)
 
+
+    def clearDatabase(self):
+        self.client.clearDatabase(gRPC_store_inventory_pb2.Empty())

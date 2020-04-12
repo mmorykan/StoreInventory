@@ -6,6 +6,7 @@ import XML_store_inventory_server
 import gRPC_store_inventory_pb2_grpc
 from xmlrpc.server import DocXMLRPCServer
 import pickle
+import os
 
 
 class Inventory:
@@ -312,6 +313,13 @@ class Inventory:
                 list_of_orders.append(order)
 
         return list_of_orders
+
+
+    def clear_database(self):
+        """
+        Completely wipes the the database file
+        """
+        open('store_inventory_database.bin', 'w').close()
 
 
 def load_database(store_inventory):

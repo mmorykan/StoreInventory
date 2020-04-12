@@ -129,6 +129,8 @@ def main():
     list_orders.add_argument('--is_shipped', choices=['T', 'F'], help='Whether or not the order has been shipped')
     list_orders.add_argument('--is_paid', choices=['T', 'F'], help='Whether or not the order has been paid')
 
+    clear_database = subparsers.add_parser(name='clear-database', help='Wipe the database file')
+
     args = parser.parse_args()
 
     # Retrieve the correct client based on gRPC or XML-RPC connection
@@ -158,8 +160,10 @@ def main():
         client.addProductsToOrder(args.id_number, args.products)
     elif args.cmd == 'remove-from-order':
         client.removeProductsFromOrder(args.id_number, args.products)
-    else:
+    elif args.cmd == 'list-orders':
         client.listOrders(args.is_shipped, args.is_paid)
+    else:
+        client.clearDatabase()
 
 
 if __name__ == '__main__':

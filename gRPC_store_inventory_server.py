@@ -166,3 +166,7 @@ class ProductInventory(gRPC_store_inventory_pb2_grpc.ProductInventoryServicer):
         for order in list_of_orders:
             yield self.update_order_fields(order)
 
+
+    def clearDatabase(self, request, context):
+        self.shared_database.clear_database()
+        return gRPC_store_inventory_pb2.Empty()

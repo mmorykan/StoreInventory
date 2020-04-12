@@ -69,6 +69,11 @@ class ProductInventoryStub(object):
         request_serializer=gRPC__store__inventory__pb2.OrderStatus.SerializeToString,
         response_deserializer=gRPC__store__inventory__pb2.Order.FromString,
         )
+    self.clearDatabase = channel.unary_unary(
+        '/ecommerce.ProductInventory/clearDatabase',
+        request_serializer=gRPC__store__inventory__pb2.Empty.SerializeToString,
+        response_deserializer=gRPC__store__inventory__pb2.Empty.FromString,
+        )
 
 
 class ProductInventoryServicer(object):
@@ -87,9 +92,10 @@ class ProductInventoryServicer(object):
 
   def addProduct(self, request, context):
     """
-    Add a product to the database
+    Add a product to the database. A product must not have the same name as another product
     Parameter: Product
     Returns: ProductID
+    Return value may be null product id, in which case the user specified Product name was invalid
     """
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
     context.set_details('Method not implemented!')
@@ -110,6 +116,7 @@ class ProductInventoryServicer(object):
     Get a product from the database by specifying either the product's id value or the product's name
     Parameter: ProductID
     Returns: Product
+    Return value may be the null product, in which case the user specified product id value or name was invalid
     """
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
     context.set_details('Method not implemented!')
@@ -120,6 +127,7 @@ class ProductInventoryServicer(object):
     Get an order from the database by specifying the order's id value
     Parameter: OrderID
     Returns: Order
+    Return value may be null order, in which case the user specified id value was invalid
     """
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
     context.set_details('Method not implemented!')
@@ -130,6 +138,7 @@ class ProductInventoryServicer(object):
     Update a product currently in the database, denoting it by either its id value or its name
     Parameter: UpdateProductInfo
     Returns: Product
+    Return value may be null product in which case the user specified id value or name was invalid
     """
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
     context.set_details('Method not implemented!')
@@ -140,6 +149,7 @@ class ProductInventoryServicer(object):
     Update an order currently in the database, denoting it by its id value
     Parameter: UpdateOrderInfo
     Returns: Order
+    Return value may be null order, in which case the user specified id value was invalid
     """
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
     context.set_details('Method not implemented!')
@@ -151,6 +161,7 @@ class ProductInventoryServicer(object):
     This will update the products stock automatically 
     Parameter: AddToOrder
     Returns: Order
+    Return value may be null order, in which case the user specified id value was invalid
     """
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
     context.set_details('Method not implemented!')
@@ -162,6 +173,7 @@ class ProductInventoryServicer(object):
     This will update the products stock automatically
     Parameter: RemoveFromOrder
     Returns: Order
+    Return value may be null order, in which case user specified id value was invalid
     """
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
     context.set_details('Method not implemented!')
@@ -184,6 +196,16 @@ class ProductInventoryServicer(object):
     The list of orders can be narrowed down by shipped status and/or paid status of the orders
     Parameter: OrderStatus
     Returns: Stream of Order
+    """
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
+  def clearDatabase(self, request, context):
+    """
+    Wipes the database file
+    Parameter: Empty
+    Returns: Empty
     """
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
     context.set_details('Method not implemented!')
@@ -246,6 +268,11 @@ def add_ProductInventoryServicer_to_server(servicer, server):
           servicer.listOrders,
           request_deserializer=gRPC__store__inventory__pb2.OrderStatus.FromString,
           response_serializer=gRPC__store__inventory__pb2.Order.SerializeToString,
+      ),
+      'clearDatabase': grpc.unary_unary_rpc_method_handler(
+          servicer.clearDatabase,
+          request_deserializer=gRPC__store__inventory__pb2.Empty.FromString,
+          response_serializer=gRPC__store__inventory__pb2.Empty.SerializeToString,
       ),
   }
   generic_handler = grpc.method_handlers_generic_handler(

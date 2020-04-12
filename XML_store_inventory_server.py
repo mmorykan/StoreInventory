@@ -44,7 +44,7 @@ class XMLProductInventory():
                                                     wholesale_cost=wholesale_cost, 
                                                     sale_cost=sale_cost, 
                                                     amount_in_stock=stock)
-        if valid_id:
+        if valid_id != 'null product':
             return valid_id
         else:
             return "A product with that name already exists"
@@ -145,4 +145,8 @@ class XMLProductInventory():
         Yields all appropriate orders
         """   
         return self.shared_database.list_orders(is_shipped, is_paid)
+
+
+    def clearDatabase(self):
+        self.shared_database.clear_database()
         

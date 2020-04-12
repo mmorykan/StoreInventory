@@ -91,6 +91,13 @@ service ProductInventory {
     Returns: Stream of Order
     */
     rpc listOrders(OrderStatus) returns (stream Order);
+
+    /*
+    Wipes the database file
+    Parameter: Empty
+    Returns: Empty
+    */
+    rpc clearDatabase(Empty) returns (Empty);
 }
 
 
