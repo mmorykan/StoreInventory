@@ -50,7 +50,9 @@ def amend_orders(client):
 
 
 def list_orders(client):
+    start = time.monotonic()
     client.listOrders(gRPC_store_inventory_pb2.OrderStatus(is_shipped='', is_paid=''))
+    print(time.monotonic() - start)
     client.listOrders(gRPC_store_inventory_pb2.OrderStatus(is_shipped='T', is_paid='F'))
     client.listOrders(gRPC_store_inventory_pb2.OrderStatus(is_shipped='F', is_paid='T'))
     client.listOrders(gRPC_store_inventory_pb2.OrderStatus(is_shipped='T', is_paid='T'))
@@ -67,10 +69,10 @@ def call_functions(client):
 
 def main():
 
-    with grpc.insecure_channel('18.218.18.59:50052') as channel:
+    with grpc.insecure_channel('3.22.170.142:50052') as channel:
         client = gRPC_store_inventory_pb2_grpc.ProductInventoryStub(channel)
 
-        client.clearDatabase(gRPC_store_inventory_pb2.Clear(clear='T'))
+        client.clearDatabase(gRPC_store_inventory_pb2.Empty())
         populate(client)
 
         start_time = time.monotonic()
@@ -79,7 +81,7 @@ def main():
 
         print(end_time - start_time)
 
-        client.clearDatabase(gRPC_store_inventory_pb2.Clear(clear='T'))
+        client.clearDatabase(gRPC_store_inventory_pb2.Empty())
 
 
 if __name__ == '__main__':

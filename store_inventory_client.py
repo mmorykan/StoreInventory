@@ -4,6 +4,14 @@ import sys
 import argparse
 
 
+"""
+Example Usage for XML-RPC:
+python3 store_inventory_client.py 127.0.0.1 --port 8000 xml add-product hammer "32 ounce wooden handle" Craftsman 8.99 6.99 10
+
+Example Usage for gRPC:
+python3 store_inventory_client.py 127.0.0.1 grpc add-product hammer "32 ounce wooden handle" Craftsman 8.99 6.99 10
+"""
+
 def get_client(server, address, port):
     """
     Returns the correct client based on the specified server on the given address and port
@@ -118,11 +126,13 @@ def main():
     add_products_to_order = subparsers.add_parser(name='add-to-order', help='Add products to an order or add quantities of existing products to an order')
     add_products_to_order.add_argument('id_number', help='The id value of the order')
     add_products_to_order.add_argument('products', nargs='+', help='A list of products followed by their counts to be added to the order')
+    # Example: python3 store_inventory_client.py 127.0.0.1 grpc add-to-order <order id> <product id> <quantity> <product id> <quantity> ...
 
     # Remove quantities of products from an order
     remove_products_from_order = subparsers.add_parser(name='remove-from-order', help='Remove products from an order or remove quantities of existing products from an order')
     remove_products_from_order.add_argument('id_number', help='The id value of the order')
     remove_products_from_order.add_argument('products', nargs='+', help='A list of products followed by their counts to be removed from an order')
+    # Example: python3 store_inventory_client.py 127.0.0.1 grpc remove-from-order <order id> <product id> <quantity> <product id> <quantity> ...
 
     # List all orders. Orders can be queries by shipped status and paid status
     list_orders = subparsers.add_parser(name='list-orders', help='List all orders based on shipped status and paid status or list all total orders')
@@ -130,7 +140,7 @@ def main():
     list_orders.add_argument('--is_paid', choices=['T', 'F'], help='Whether or not the order has been paid')
 
     clear_database = subparsers.add_parser(name='clear-database', help='Wipe the database file')
-    clear_database.add_argument('--clear', choices=['T', 'F'], help='Determine whether or not the wipe the database', default='F')
+    # clear_database.add_argument('--clear', choices=['T', 'F'], help='Determine whether or not the wipe the database', default='F')
     args = parser.parse_args()
 
     # Retrieve the correct client based on gRPC or XML-RPC connection
@@ -163,7 +173,7 @@ def main():
     elif args.cmd == 'list-orders':
         client.listOrders(args.is_shipped, args.is_paid)
     else:
-        client.clearDatabase(args.clear)
+        client.clearDatabase()
 
 
 if __name__ == '__main__':

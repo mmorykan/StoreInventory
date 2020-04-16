@@ -316,7 +316,7 @@ class Inventory:
 
     def clear_database(self):
         """
-        Completely wipes the the database file
+        Completely wipes the database file
         """
         open('store_inventory_database.bin', 'w').close()
 
@@ -357,7 +357,7 @@ def main():
     grpc_server.add_insecure_port('[::]:50052')    
     grpc_server.start()
 
-    with DocXMLRPCServer(('', 8000)) as xml_server:
+    with DocXMLRPCServer(('', 8000), allow_none=True) as xml_server:
         xml_server.register_instance(XML_store_inventory_server.XMLProductInventory(store_inventory))
         
         load_database(store_inventory)

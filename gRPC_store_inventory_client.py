@@ -125,5 +125,5 @@ class grpcStoreInventoryClient:
         print(list_of_orders)
 
 
-    def clearDatabase(self, clear):
+    def clearDatabase(self):
         self.client.clearDatabase(gRPC_store_inventory_pb2.Empty())

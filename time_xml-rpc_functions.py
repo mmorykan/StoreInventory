@@ -2,17 +2,21 @@ from xmlrpc.client import ServerProxy
 import random
 import uuid
 import time
+import subprocess
 
+"""
+This file times the xml-rpc functions on the server one time and prints the output
+"""
 
-client = ServerProxy('http://18.218.18.59:8000')
+client = ServerProxy('http://3.22.170.142:8000', allow_none=True)
 
 name_list = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
 product_id = []
 order_id = []
 
-def populate():
-    for _ in range(1000):
-        client.addProduct(str(uuid.uuid4()), str(uuid.uuid4()), str(uuid.uuid4()), random.random(), random.random(), random.randint(0, 1000))
+# def populate():
+#     for _ in range(1000):
+#         client.addProduct(str(uuid.uuid4()), str(uuid.uuid4()), str(uuid.uuid4()), random.random(), random.random(), random.randint(0, 1000))
 
 
 def add_products():
@@ -24,12 +28,12 @@ def add_products():
 def get_and_update_products():
     for id_ in product_id:
         client.getProduct(id_, '')
-        client.updateProduct(id_, '', 'differetn description', 'mark', 3, 9, 100)
+        client.updateProduct(id_, '', 'different description', 'mark', 3, 9, 100)
 
 
 def list_products():
     client.listProducts('T', '')
-    client.listProducts('T', 'differnt descriptioin')
+    client.listProducts('T', 'different descriptioin')
     client.listProducts('F', 'diff')
     client.listProducts('F', '')
 
@@ -64,24 +68,21 @@ def call_all_functions():
     list_orders()
 
 
-def clear_database():
-    try:
-        client.clearDatabase('T')
-    except:
-        return
-
-
 def main():
-    clear_database()
-    populate()
+    host = 'ec2-user@aws-project2'
+    kill_command = 'kill -9 \$(ps aux | grep python3 | awk \'{print \$2}\' | head -n 1)'
+    start_command = 'python3 store_inventory_run_servers.py'
+    subprocess.Popen(['ssh', host, kill_command], shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+    client.clearDatabase()
+    subprocess.Popen(['ssh', host, start_command], shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    # populate()
     
     start_time = time.monotonic()
     call_all_functions()
     end_time = time.monotonic()
 
     print(end_time - start_time)
-
-    clear_database()
 
 
 if __name__ == '__main__':

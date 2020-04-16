@@ -83,9 +83,7 @@ class xmlrpcStoreInventoryClient:
         print(list_of_orders)
 
 
-    def clearDatabase(self, clear):
-        try:
-            self.client.clearDatabase(clear)
-        except:
-            return
+    def clearDatabase(self):
+        self.client.clearDatabase()
+        
 
